@@ -41,7 +41,7 @@ repos:
     
   meta-pcengines:
     url: https://github.com/3mdeb/meta-pcengines
-    refspec: 4160308aaca748d64de142cfe5d4b8cc39a81063
+    refspec: 8cc1a587926acedd0c14ac9167c6eb996616f504
   
   meta-trenchboot:
   
