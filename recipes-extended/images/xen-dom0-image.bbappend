@@ -11,7 +11,6 @@ IMAGE_INSTALL_append = " \
   grub \
   lvm2 \
   bridge-utils \
-  seabios \
   openvswitch \
   dhcp-client \
   netcat \
