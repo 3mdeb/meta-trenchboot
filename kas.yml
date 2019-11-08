@@ -31,7 +31,7 @@ repos:
 
   meta-security:
     url: https://git.yoctoproject.org/git/meta-security
-    refspec: 86d45cc2bfc3305a39cbd0f653432bf8eb78e9ec
+    refspec: 27ddb455543b670097e252ba0d0ad5b7e4101748
     layers:
       meta-tpm:
 
@@ -41,7 +41,7 @@ repos:
     
   meta-pcengines:
     url: https://github.com/3mdeb/meta-pcengines
-    refspec: 0cbc5c38e8652b8ec60a9ef29487fed0e413c56c
+    refspec: c4ee98ab390b073807173584107c09f49ac1e390
   
   meta-trenchboot:
   
