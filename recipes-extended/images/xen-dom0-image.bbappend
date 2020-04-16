@@ -14,6 +14,7 @@ IMAGE_INSTALL_append = " \
   openvswitch \
   dhcp-client \
   netcat \
+  landing-zone \
   "
 
 IMAGE_ROOTFS_EXTRA_SPACE = "2097152"
