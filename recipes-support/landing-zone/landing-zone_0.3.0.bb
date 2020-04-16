@@ -11,7 +11,7 @@ RDEPENDS_${PN} = "bash"
 
 S = "${WORKDIR}/git"
 
-EXTRA_OEMAKE += "CC=gcc"
+SECURITY_STACK_PROTECTOR = ""
 
 do_install(){
     install -d ${D}/boot
