@@ -1,5 +1,5 @@
 KBRANCH = "linux-sl-5.5"
-SRCREV_machine = "7e95fa7180fec5bd4da5eea1ed20c1d365a0758f"
+SRCREV_machine = "eed5cdf480ee3761d18294d64ac7e2184229b51c"
 SRCREV_meta = "2c8ad5a6f5ac9c2cd9f0faa4655531113add4c4f"
 
 require recipes-kernel/linux/linux-yocto.inc
@@ -9,9 +9,9 @@ KCONF_BSP_AUDIT_LEVEL = "2"
 
 SRC_URI = "git://github.com/TrenchBoot/linux.git;protocol=https;branch=${KBRANCH};name=machine; \
            git://git.yoctoproject.org/git/yocto-kernel-cache;protocol=https;type=kmeta;name=meta;branch=yocto-5.4;destsuffix=${KMETA} \
-           file://secure-launch.cfg \
-	   file://xen.cfg"
+           file://secure-launch.cfg"
 
+SRC_URI_append_tb-xen = " file://xen.cfg"
 SRC_URI_append_pcengines-apux = " file://disable-graphics.cfg \
                                   file://edac.cfg"
 
