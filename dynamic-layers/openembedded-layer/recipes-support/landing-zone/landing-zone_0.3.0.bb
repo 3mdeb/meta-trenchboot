@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/git/COPYING;md5=4641e94ec96f98fabc56ff9cc4
 SRC_URI = "git://github.com/TrenchBoot/landing-zone.git;protocol=https;branch=master"
 SRCREV = "5073f638cb34ab3b3b96a6f0e67a298e043b1ecd"
 
-RDEPENDS_${PN} = "bash"
+RDEPENDS_${PN} = "bash util-linux"
 
 S = "${WORKDIR}/git"
 
