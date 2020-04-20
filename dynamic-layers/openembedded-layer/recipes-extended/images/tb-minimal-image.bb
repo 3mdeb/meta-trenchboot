@@ -14,5 +14,7 @@ IMAGE_INSTALL_append = " \
   dhcp-client \
 "
 
+WKS_FILE_DEPENDS_remove = "grub-efi"
+
 IMAGE_FSTYPES += "wic.gz wic.bmap"
 IMAGE_FEATURES_append = " ssh-server-openssh"

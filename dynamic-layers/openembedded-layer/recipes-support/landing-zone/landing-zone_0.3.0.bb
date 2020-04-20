@@ -17,7 +17,8 @@ do_install(){
     install -d ${D}/boot
     install -d ${D}${bindir}/landing-zone
 
-    install -m 0600 ${WORKDIR}/git/lz_header ${D}/boot/
+    install -m 0600 ${WORKDIR}/git/lz_header ${D}/boot
+    install -m 0600 ${WORKDIR}/git/lz_header ${D}${bindir}/landing-zone/
     install -m 0755 ${WORKDIR}/git/extend_all.sh ${D}${bindir}/landing-zone/
     install -m 0755 ${WORKDIR}/git/util.sh ${D}${bindir}/landing-zone/
 }

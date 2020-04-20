@@ -9,7 +9,8 @@ KCONF_BSP_AUDIT_LEVEL = "2"
 
 SRC_URI = "git://github.com/TrenchBoot/linux.git;protocol=https;branch=${KBRANCH};name=machine; \
            git://git.yoctoproject.org/git/yocto-kernel-cache;protocol=https;type=kmeta;name=meta;branch=yocto-5.4;destsuffix=${KMETA} \
-           file://secure-launch.cfg"
+           file://secure-launch.cfg \
+           file://tpm2.cfg"
 
 SRC_URI_append_tb-xen = " file://xen.cfg"
 SRC_URI_append_pcengines-apux = " file://disable-graphics.cfg \

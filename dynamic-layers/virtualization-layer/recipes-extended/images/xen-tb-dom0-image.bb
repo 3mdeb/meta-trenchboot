@@ -17,6 +17,8 @@ IMAGE_INSTALL_append = " \
   dhcp-client \
 "
 
+WKS_FILE_DEPENDS_remove = "grub-efi"
+
 IMAGE_ROOTFS_EXTRA_SPACE = "2097152"
 IMAGE_FSTYPES += "wic.gz wic.bmap"
 
