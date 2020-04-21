@@ -12,4 +12,9 @@ target:
 repos:
   meta-pcengines:
     url: https://github.com/3mdeb/meta-pcengines
-    refspec: 5b7db8db952efa629022a63547f752ff44f49c06
+    refspec: b66a2ae4208f1b9c3686523d7f9fda5c664856fa
+
+
+local_conf_header:
+  wks_file: |
+    WKS_FILE = "trenchboot-image.wks"

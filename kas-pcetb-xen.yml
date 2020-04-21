@@ -16,3 +16,10 @@ repos:
   meta-pcengines:
     url: https://github.com/3mdeb/meta-pcengines
     refspec: 5b7db8db952efa629022a63547f752ff44f49c06
+
+
+local_conf_header:
+  xen-version: |
+    PREFERRED_VERSION_xen = "4.13%"
+    WKS_FILE = "trenchboot-xen-image.wks"
+    IMAGE_BOOT_FILES = "bzImage xen.gz lz_header"

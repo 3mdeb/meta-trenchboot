@@ -6,7 +6,7 @@ repos:
 
   poky:
     url: https://git.yoctoproject.org/git/poky
-    refspec: b23f006851e5aaf920d0d4dfccbb96da954eda20
+    refspec: 5e1f52edb7a9f790fb6cb5d96502f3690267c1b1
     layers:
       meta:
       meta-poky:
@@ -14,7 +14,7 @@ repos:
 
   meta-openembedded:
     url: http://git.openembedded.org/meta-openembedded
-    refspec: e0daf6f8e0c53e388c631b8cdf3d7d8173dcea95
+    refspec: bb65c27a772723dfe2c15b5e1b27bcc1a1ed884c
     layers:
       meta-oe:
       meta-networking:
@@ -23,7 +23,7 @@ repos:
 
   meta-security:
     url: https://git.yoctoproject.org/git/meta-security
-    refspec: 27ddb455543b670097e252ba0d0ad5b7e4101748
+    refspec: ecd8c30af6b1b957b4fa814d3f25c40f060b3ac1
     layers:
       meta-tpm:
 
@@ -61,7 +61,3 @@ local_conf_header:
         ABORT,/tmp,10M,1K"
   oe-layer-priority: |
     BBFILE_PRIORITY_openembedded-layer = "4"
-  xen-version: |
-    PREFERRED_VERSION_xen = "4.13%"
-    WKS_FILE = "trenchboot-image.wks"
-    IMAGE_BOOT_FILES = "bzImage xen.gz"
