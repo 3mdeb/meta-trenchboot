@@ -11,15 +11,15 @@ target:
 repos:
   meta-virtualization:
     url: https://git.yoctoproject.org/git/meta-virtualization
-    refspec: 062d9f1f4faf2ca8a1fe78b7c7365e6378c15836
+    refspec: 561b597d4ba91dd36147e1af81bd1edc2d6636db
 
   meta-pcengines:
     url: https://github.com/3mdeb/meta-pcengines
-    refspec: 5b7db8db952efa629022a63547f752ff44f49c06
+    refspec: 8ccf97742f58044950b67bdb4a9a7297904a00e1
 
 
 local_conf_header:
   xen-version: |
     PREFERRED_VERSION_xen = "4.13%"
-    WKS_FILE = "trenchboot-xen-image.wks"
-    IMAGE_BOOT_FILES = "bzImage xen.gz lz_header"
+    WKS_FILE = "trenchboot-image.wks"
+    IMAGE_BOOT_FILES = "bzImage xen.gz lz_header.bin"
