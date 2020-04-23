@@ -5,7 +5,8 @@ SRCREV_meta = "2c8ad5a6f5ac9c2cd9f0faa4655531113add4c4f"
 require recipes-kernel/linux/linux-yocto.inc
 
 SRC_URI = "git://github.com/TrenchBoot/linux.git;protocol=https;branch=${KBRANCH};name=machine; \
-           file://defconfig"
+           file://defconfig \
+           file://debug.cfg"
 
 SRC_URI_append_tb-xen = " file://xen.cfg"
 SRC_URI_append_pcengines-apux = " file://disable-graphics.cfg \

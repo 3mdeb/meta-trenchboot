@@ -16,6 +16,7 @@ EXTRA_OEMAKE += "DEBUG=y"
 SECURITY_STACK_PROTECTOR = ""
 
 do_install(){
+    install -d ${DEPLOY_DIR_IMAGE}
     install -d ${D}${bindir}/landing-zone
 
     install -m 0600 ${WORKDIR}/git/lz_header.bin ${DEPLOY_DIR_IMAGE}
@@ -24,5 +25,4 @@ do_install(){
     install -m 0755 ${WORKDIR}/git/util.sh ${D}${bindir}/landing-zone/
 }
 
-FILES_${PN} += "/boot"
 FILES_${PN} += "${bindir}/landing-zone"

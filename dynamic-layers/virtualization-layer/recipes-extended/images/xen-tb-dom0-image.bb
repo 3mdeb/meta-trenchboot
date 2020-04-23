@@ -2,6 +2,7 @@ require recipes-extended/images/xen-image-minimal.bb
 
 IMAGE_INSTALL_append = " \
   kernel-modules \
+  coreutils \
   xen-misc \
   tpm2-tools \
   tpm2-abrmd \
