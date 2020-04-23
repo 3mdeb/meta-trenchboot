@@ -5,7 +5,8 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/git/COPYING;md5=4641e94ec96f98fabc56ff9cc48be14b"
 
 SRC_URI = "git://github.com/TrenchBoot/landing-zone.git;protocol=https;branch=master"
-SRCREV = "89fc4113166823268b07d27f8b13d82223a2361d"
+SRCREV = "2750c7b50d9d845887fad2bce3afe61f25da8505"
+
 
 DEPENDS = "util-linux-native"
 RDEPENDS_${PN} = "bash"
