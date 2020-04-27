@@ -1,0 +1,15 @@
+header:
+  version: 8
+  includes:
+  - kas.yml
+
+distro: tb-base
+machine: pcengines-apu2
+target:
+  - tb-minimal-initramfs-image
+
+
+repos:
+  meta-pcengines:
+    url: https://github.com/3mdeb/meta-pcengines
+    refspec: 5b7db8db952efa629022a63547f752ff44f49c06
