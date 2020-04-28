@@ -12,6 +12,10 @@ repos:
   meta-virtualization:
     url: https://git.yoctoproject.org/git/meta-virtualization
     refspec: 561b597d4ba91dd36147e1af81bd1edc2d6636db
+    patches:
+      dev86-srcuri-fix:
+        repo: meta-trenchboot
+        path: patches/0001-dev86-update-SRC_URI-and-associated-checksums.patch
 
   meta-pcengines:
     url: https://github.com/3mdeb/meta-pcengines
