@@ -1,10 +1,9 @@
-image: kasproject/kas:2.0
-
 stages:
   - build
   - test
 
 build:
+  image: kasproject/kas:2.0
   stage: build
   tags:
     - local
@@ -31,11 +30,20 @@ build:
     paths:
       - artifacts/*
 
+        # test_booting:
+        #   stage: test
+        #   tags:
+        #     - local
+        #     - test
+        #   script:
+        #     - export "ARTIFACTS_URL=$(cat artifacts/artifacts_url.txt)"
+        #     - echo "ARTIFACTS_URL=$ARTIFACTS_URL"
+
 test_booting:
   stage: test
-  tags:
-    - local
-    - test
-  script:
-    - export "ARTIFACTS_URL=$(cat artifacts/artifacts_url.txt)"
-    - echo "ARTIFACTS_URL=$ARTIFACTS_URL"
+  variables:
+    TEST_NAME: "boot_1"
+  trigger:
+    project: trenchboot1/3mdeb/testing-trenchboot
+    branch: master
+    strategy: depend
