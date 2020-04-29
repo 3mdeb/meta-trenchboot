@@ -2,13 +2,14 @@ image: kasproject/kas:2.0
 
 stages:
   - build
+  - test
 
 build:
   stage: build
   tags:
-    - build
     - local
-  timeout: 24h
+    - build
+  timeout: 6h
   cache: {}
   script:
     - cd ..
@@ -24,7 +25,17 @@ build:
     - cp ../build/tmp/deploy/images/pcengines-apu2/tb-minimal-initramfs-image-pcengines-apu2.cpio.gz artifacts
     - time rsync -av -e "ssh -i $YOCTO_HTTP_CACHE_RSYNC_KEY -o StrictHostKeyChecking=no" ../build/downloads $YOCTO_HTTP_CACHE_USER@$YOCTO_HTTP_CACHE_IP:$YOCTO_CACHE_PATH
     - time rsync -av -e "ssh -i $YOCTO_HTTP_CACHE_RSYNC_KEY -o StrictHostKeyChecking=no" ../build/sstate-cache $YOCTO_HTTP_CACHE_USER@$YOCTO_HTTP_CACHE_IP:$YOCTO_CACHE_PATH
+    - echo "https://gitlab.com/trenchboot1/3mdeb/meta-trenchboot/-/jobs/$CI_JOB_ID/artifacts/download" > artifacts/artifacts_url.txt
   artifacts:
     name: "meta-trenchboot-${CI_COMMIT_SHA::12}"
     paths:
       - artifacts/*
+
+test_booting:
+  stage: test
+  tags:
+    - local
+    - test
+  script:
+    - export ARTIFACTS_URL=$(cat artifacts/artifacts_url.txt)
+    - echo "The artifacts URL: $ARTIFACTS_URL"
