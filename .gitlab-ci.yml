@@ -45,5 +45,5 @@ test_booting:
     TEST_NAME: "boot_1"
   trigger:
     project: trenchboot1/3mdeb/testing-trenchboot
-    branch: master
+    branch: test_gitlabci
     strategy: depend
