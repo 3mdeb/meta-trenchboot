@@ -37,5 +37,5 @@ test_booting:
     - local
     - test
   script:
-    - export ARTIFACTS_URL=$(cat artifacts/artifacts_url.txt)
-    - echo "The artifacts URL: $ARTIFACTS_URL"
+    - export "ARTIFACTS_URL=$(cat artifacts/artifacts_url.txt)"
+    - echo "ARTIFACTS_URL=$ARTIFACTS_URL"
