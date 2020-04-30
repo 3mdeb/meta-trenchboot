@@ -12,7 +12,7 @@ build:
   cache: {}
   script:
     - cd ..
-    - sed -e "s@<YOCTO_HTTP_CACHE_IP>@$YOCTO_HTTP_CACHE_IP@" -i kas-cache.yml
+    - sed -e "s@<YOCTO_HTTP_CACHE_IP>@$YOCTO_HTTP_CACHE_IP@" -i meta-trenchboot/kas-cache.yml
     - kas build meta-trenchboot/kas-pcetb-base.yml:kas-cache.yml
     - kas build meta-trenchboot/kas-pcetb-xen.yml:kas-cache.yml
   after_script:
