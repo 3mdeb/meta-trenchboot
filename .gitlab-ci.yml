@@ -12,8 +12,9 @@ build:
   cache: {}
   script:
     - cd ..
-    - kas build meta-trenchboot/kas-pcetb-base.yml
-    - kas build meta-trenchboot/kas-pcetb-xen.yml
+    - sed -e "s@<YOCTO_HTTP_CACHE_IP>@$YOCTO_HTTP_CACHE_IP@" -i kas-cache.yml
+    - kas build meta-trenchboot/kas-pcetb-base.yml:kas-cache.yml
+    - kas build meta-trenchboot/kas-pcetb-xen.yml:kas-cache.yml
   after_script:
     - mkdir artifacts
     - cp ../build/tmp/deploy/images/pcengines-apu2/tb-minimal-image-pcengines-apu2.wic.gz artifacts
