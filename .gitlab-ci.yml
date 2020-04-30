@@ -1,14 +1,13 @@
-image: kasproject/kas:2.0
-
 stages:
   - build
 
 build:
+  image: kasproject/kas:2.0
   stage: build
   tags:
-    - build
     - local
-  timeout: 24h
+    - build
+  timeout: 6h
   cache: {}
   script:
     - cd ..
