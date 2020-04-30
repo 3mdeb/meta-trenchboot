@@ -30,15 +30,6 @@ build:
     paths:
       - artifacts/*
 
-        # test_booting:
-        #   stage: test
-        #   tags:
-        #     - local
-        #     - test
-        #   script:
-        #     - export "ARTIFACTS_URL=$(cat artifacts/artifacts_url.txt)"
-        #     - echo "ARTIFACTS_URL=$ARTIFACTS_URL"
-
 test_booting:
   stage: test
   variables:
