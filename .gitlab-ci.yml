@@ -1,5 +1,6 @@
 stages:
   - build
+  - test
 
 build:
   image: kasproject/kas:2.0
@@ -11,19 +12,28 @@ build:
   cache: {}
   script:
     - cd ..
-    - kas build meta-trenchboot/kas-pcetb-initramfs.yml
-    - kas build meta-trenchboot/kas-pcetb-base.yml
-    - kas build meta-trenchboot/kas-pcetb-xen.yml
+    - sed -e "s@<YOCTO_HTTP_CACHE_IP>@$YOCTO_HTTP_CACHE_IP@" -i meta-trenchboot/kas-cache.yml
+    - kas build meta-trenchboot/kas-pcetb-base.yml:meta-trenchboot/kas-cache.yml
+    - kas build meta-trenchboot/kas-pcetb-xen.yml:meta-trenchboot/kas-cache.yml
   after_script:
     - mkdir artifacts
     - cp ../build/tmp/deploy/images/pcengines-apu2/tb-minimal-image-pcengines-apu2.wic.gz artifacts
     - cp ../build/tmp/deploy/images/pcengines-apu2/xen-tb-dom0-image-pcengines-apu2.wic.gz artifacts
     - cp ../build/tmp/deploy/images/pcengines-apu2/tb-minimal-image-pcengines-apu2.wic.bmap artifacts
     - cp ../build/tmp/deploy/images/pcengines-apu2/xen-tb-dom0-image-pcengines-apu2.wic.bmap artifacts
-    - cp ../build/tmp/deploy/images/pcengines-apu2/tb-minimal-initramfs-image-pcengines-apu2.cpio.gz artifacts
     - time rsync -av -e "ssh -i $YOCTO_HTTP_CACHE_RSYNC_KEY -o StrictHostKeyChecking=no" ../build/downloads $YOCTO_HTTP_CACHE_USER@$YOCTO_HTTP_CACHE_IP:$YOCTO_CACHE_PATH
     - time rsync -av -e "ssh -i $YOCTO_HTTP_CACHE_RSYNC_KEY -o StrictHostKeyChecking=no" ../build/sstate-cache $YOCTO_HTTP_CACHE_USER@$YOCTO_HTTP_CACHE_IP:$YOCTO_CACHE_PATH
+    - echo "https://gitlab.com/trenchboot1/3mdeb/meta-trenchboot/-/jobs/$CI_JOB_ID/artifacts/download" > artifacts/artifacts_url.txt
   artifacts:
     name: "meta-trenchboot-${CI_COMMIT_SHA::12}"
     paths:
       - artifacts/*
+
+test_booting:
+  stage: test
+  variables:
+    TEST_NAME: "boot_1"
+  trigger:
+    project: trenchboot1/3mdeb/testing-trenchboot
+    branch: master
+    strategy: depend
