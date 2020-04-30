@@ -8,9 +8,6 @@ build:
   tags:
     - local
     - build
-  only:
-    refs:
-      - tags
   timeout: 6h
   cache: {}
   script:
