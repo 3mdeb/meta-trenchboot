@@ -17,13 +17,20 @@ EXTRA_OEMAKE += "DEBUG=y"
 SECURITY_STACK_PROTECTOR = ""
 
 do_install(){
-    install -d ${DEPLOY_DIR_IMAGE}
     install -d ${D}${bindir}/landing-zone
 
-    install -m 0600 ${WORKDIR}/git/lz_header.bin ${DEPLOY_DIR_IMAGE}
-    install -m 0600 ${WORKDIR}/git/lz_header.bin ${D}${bindir}/landing-zone/
-    install -m 0755 ${WORKDIR}/git/extend_all.sh ${D}${bindir}/landing-zone/
-    install -m 0755 ${WORKDIR}/git/util.sh ${D}${bindir}/landing-zone/
+    install -m 0600 ${S}/lz_header.bin ${D}${bindir}/landing-zone/
+    install -m 0755 ${S}/extend_all.sh ${D}${bindir}/landing-zone/
+    install -m 0755 ${S}/util.sh ${D}${bindir}/landing-zone/
+}
+
+inherit deploy
+
+do_deploy() {
+    install -d ${DEPLOY_DIR_IMAGE}
+    install -m 0600 ${S}/lz_header.bin ${DEPLOY_DIR_IMAGE}
 }
 
 FILES_${PN} += "${bindir}/landing-zone"
+
+addtask do_deploy after do_compile before do_build

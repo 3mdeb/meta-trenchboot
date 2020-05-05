@@ -18,3 +18,4 @@ WKS_FILE_DEPENDS_remove = "grub-efi"
 
 IMAGE_FSTYPES += "wic.gz wic.bmap"
 IMAGE_FEATURES_append = " ssh-server-openssh"
+do_image_wic[depends] += "landing-zone:do_deploy"
