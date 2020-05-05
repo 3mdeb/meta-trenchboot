@@ -22,6 +22,7 @@ WKS_FILE_DEPENDS_remove = "grub-efi"
 
 IMAGE_ROOTFS_EXTRA_SPACE = "2097152"
 IMAGE_FSTYPES += "wic.gz wic.bmap"
+do_image_wic[depends] += "landing-zone:do_deploy"
 
 build_syslinux_cfg () {
         echo "ALLOWOPTIONS 1" > ${SYSLINUX_CFG}
