@@ -27,8 +27,8 @@ do_install(){
 inherit deploy
 
 do_deploy() {
-    install -d ${DEPLOY_DIR_IMAGE}
-    install -m 0600 ${S}/lz_header.bin ${DEPLOY_DIR_IMAGE}
+    install -d ${DEPLOYDIR}
+    install -m 0600 ${S}/lz_header.bin ${DEPLOYDIR}
 }
 
 FILES_${PN} += "${bindir}/landing-zone"
