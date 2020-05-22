@@ -1,0 +1,35 @@
+From 098c5460d6b4b30e3df8505fed76c34f4f7393ca Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Norbert=20Kami=C5=84ski?= <norbert.kaminski@3mdeb.com>
+Date: Fri, 22 May 2020 17:11:41 +0200
+Subject: [PATCH] custom grub.cfg wic patch
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Norbert Kamiński <norbert.kaminski@3mdeb.com>
+---
+ scripts/lib/wic/plugins/source/bootimg-efi.py | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/scripts/lib/wic/plugins/source/bootimg-efi.py b/scripts/lib/wic/plugins/source/bootimg-efi.py
+index 2cfdc10ecd..6bf8208560 100644
+--- a/scripts/lib/wic/plugins/source/bootimg-efi.py
++++ b/scripts/lib/wic/plugins/source/bootimg-efi.py
+@@ -241,6 +241,15 @@ class BootimgEFIPlugin(SourcePlugin):
+ 
+         try:
+             if source_params['loader'] == 'grub-efi':
++                deploy_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
++                if not deploy_dir:
++                    raise WicError("Couldn't find DEPLOY_DIR_IMAGE, exiting")
++                artifact_path = os.path.join(deploy_dir, "grub.cfg")
++                if not os.path.exists(artifact_path):
++                  raise WicError("Couldn't find grub.cfg file, exiting")
++                shutil.copyfile("%s/grub.cfg" % deploy_dir,
++                                "%s/hdd/boot/EFI/BOOT/grub.cfg" % cr_workdir)
++
+                 shutil.copyfile("%s/hdd/boot/EFI/BOOT/grub.cfg" % cr_workdir,
+                                 "%s/grub.cfg" % cr_workdir)
+                 for mod in [x for x in os.listdir(kernel_dir) if x.startswith("grub-efi-")]:
+-- 
+2.17.1
