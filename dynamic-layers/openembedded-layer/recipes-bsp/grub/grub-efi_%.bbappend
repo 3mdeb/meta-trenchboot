@@ -1,6 +1,6 @@
 BRANCH = "trenchboot_support"
 SRC_URI_remove = " ${GNU_MIRROR}/grub/grub-${PV}.tar.gz"
-SRC_URI_append = " git://github.com/3mdeb/grub2.git;branch=${BRANCH};protocol=https"
+SRC_URI_append = " git://github.com/3mdeb/grub.git;branch=${BRANCH};protocol=https"
 
 S = "${WORKDIR}/git"
 

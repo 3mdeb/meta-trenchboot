@@ -8,7 +8,6 @@ machine: genericx86-64
 target:
   - tb-minimal-efi-image
 
-
 local_conf_header:
   wks_file: |
     WKS_FILE = "trenchboot-efi-image.wks"
