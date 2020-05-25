@@ -1,0 +1,29 @@
+From 36c56c623ff2826fafc953cd42075bbd71afac58 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Norbert=20Kami=C5=84ski?= <norbert.kaminski@3mdeb.com>
+Date: Mon, 25 May 2020 14:12:18 +0200
+Subject: [PATCH] Ignore specific warnings
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Norbert Kamiński <norbert.kaminski@3mdeb.com>
+---
+ src/Makefile.housekeeping | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Makefile.housekeeping b/Makefile.housekeeping
+index f8334921..7477c175 100644
+--- a/Makefile.housekeeping
++++ b/Makefile.housekeeping
+@@ -451,6 +451,8 @@ HOST_CFLAGS	+= $(WORKAROUND_CFLAGS) -O2 -g
+ #
+ ifneq ($(NO_WERROR),1)
+ CFLAGS		+= -Werror
++CFLAGS		+= -Wno-format-overflow
++CFLAGS		+= -Wno-error=address-of-packed-member
+ ASFLAGS		+= --fatal-warnings
+ HOST_CFLAGS	+= -Werror
+ endif
+-- 
+2.17.1
+

@@ -12,6 +12,7 @@ IMAGE_INSTALL_append = " \
   landing-zone \
   grub-efi \
   dhcp-client \
+  ipxe \
 "
 
 IMAGE_FSTYPES += "wic.gz wic.bmap"
