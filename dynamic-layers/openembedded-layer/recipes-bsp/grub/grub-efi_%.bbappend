@@ -20,7 +20,8 @@ do_configure_prepend() {
     ${S}/autogen.sh )
 }
 
-do_deploy() {
+do_deploy_append() {
     # provide custom grub config
+    rm ${DEPLOYDIR}/grub.cfg
     install -m 644 ${WORKDIR}/grub.cfg ${DEPLOYDIR}
 }

@@ -1,21 +1,21 @@
-From 098c5460d6b4b30e3df8505fed76c34f4f7393ca Mon Sep 17 00:00:00 2001
+From fdb17a7209f0b92bd82168846e0f7904993473ec Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Norbert=20Kami=C5=84ski?= <norbert.kaminski@3mdeb.com>
-Date: Fri, 22 May 2020 17:11:41 +0200
-Subject: [PATCH] custom grub.cfg wic patch
+Date: Mon, 25 May 2020 09:57:41 +0200
+Subject: [PATCH] Add lz and custom grub cfg to bootimg
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Norbert Kamiński <norbert.kaminski@3mdeb.com>
 ---
- scripts/lib/wic/plugins/source/bootimg-efi.py | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ scripts/lib/wic/plugins/source/bootimg-efi.py | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/scripts/lib/wic/plugins/source/bootimg-efi.py b/scripts/lib/wic/plugins/source/bootimg-efi.py
-index 2cfdc10ecd..6bf8208560 100644
+index 2cfdc10ecd..c7b94846bc 100644
 --- a/scripts/lib/wic/plugins/source/bootimg-efi.py
 +++ b/scripts/lib/wic/plugins/source/bootimg-efi.py
-@@ -241,6 +241,15 @@ class BootimgEFIPlugin(SourcePlugin):
+@@ -241,8 +241,22 @@ class BootimgEFIPlugin(SourcePlugin):
  
          try:
              if source_params['loader'] == 'grub-efi':
@@ -30,6 +30,14 @@ index 2cfdc10ecd..6bf8208560 100644
 +
                  shutil.copyfile("%s/hdd/boot/EFI/BOOT/grub.cfg" % cr_workdir,
                                  "%s/grub.cfg" % cr_workdir)
++                artifact_path = os.path.join(deploy_dir, "lz_header.bin")
++                if not os.path.exists(artifact_path):
++                    raise WicError("Couldn't find lz_header.bin file, exiting")
++                shutil.copyfile("%s/lz_header.bin" % deploy_dir,
++                                "%s/hdd/boot/lz_header.bin" % cr_workdir)
                  for mod in [x for x in os.listdir(kernel_dir) if x.startswith("grub-efi-")]:
+                     cp_cmd = "cp %s/%s %s/EFI/BOOT/%s" % (kernel_dir, mod, hdddir, mod[9:])
+                     exec_cmd(cp_cmd, True)
 -- 
 2.17.1
+

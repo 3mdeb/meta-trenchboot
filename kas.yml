@@ -14,7 +14,7 @@ repos:
     patches:
       wic-grub:
        repo: meta-trenchboot
-       path: patches/0002-wic-bootimg-efi-add-kernel-image-and-grub.cfg.patch
+       path: patches/0002-Add-lz-and-custom-grub-cfg-to-bootimg.patch
 
   meta-openembedded:
     url: http://git.openembedded.org/meta-openembedded

@@ -19,12 +19,10 @@ SECURITY_STACK_PROTECTOR = ""
 
 do_install(){
     install -d ${D}${bindir}/landing-zone
-    install -d ${D}/boot
 
     install -m 0600 ${S}/lz_header.bin ${D}${bindir}/landing-zone/
     install -m 0755 ${S}/extend_all.sh ${D}${bindir}/landing-zone/
     install -m 0755 ${S}/util.sh ${D}${bindir}/landing-zone/
-    install -m 0600 ${S}/lz_header.bin ${D}/boot
 }
 
 inherit deploy
