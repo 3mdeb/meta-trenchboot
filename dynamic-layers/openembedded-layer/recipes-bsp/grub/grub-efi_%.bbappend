@@ -10,6 +10,10 @@ SRC_URI += " \
 
 S = "${WORKDIR}/git"
 
+GRUB_BUILDIN ?= "boot linux ext2 fat serial part_msdos part_gpt normal \
+                 efi_gop iso9660 configfile search loadenv test linux16 \
+                 slaunch slaunch_module"
+
 SRCREV = "01c6caa26bb2db0625d04379a34088fa25861a56"
 
 PV = "2.0.4-rc1+${SRCREV}"
@@ -22,6 +26,5 @@ do_configure_prepend() {
 
 do_deploy_append() {
     # provide custom grub config
-    rm ${DEPLOYDIR}/grub.cfg
     install -m 644 ${WORKDIR}/grub.cfg ${DEPLOYDIR}
 }
