@@ -10,9 +10,9 @@ SRC_URI += " \
 
 S = "${WORKDIR}/git"
 
-GRUB_BUILDIN ?= "boot linux ext2 fat serial part_msdos part_gpt normal \
-                 efi_gop iso9660 configfile search loadenv test linux16 \
-                 slaunch slaunch_module"
+GRUB_BUILDIN = "boot linux ext2 fat serial part_msdos part_gpt normal \
+                efi_gop iso9660 configfile search loadenv test linux16 \
+                slaunch search_label"
 
 SRCREV = "01c6caa26bb2db0625d04379a34088fa25861a56"
 

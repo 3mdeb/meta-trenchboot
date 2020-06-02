@@ -241,9 +241,19 @@ class BootimgEFIPlugin(SourcePlugin):
 
         try:
             if source_params['loader'] == 'grub-efi':
+                machine = get_bitbake_var("MACHINE")
+                if not machine:
+                    raise WicError("Couldn't find MACHINE, exiting")
+                kernel_image_file = "bzImage-initramfs-" + machine + ".bin"
                 deploy_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
                 if not deploy_dir:
                     raise WicError("Couldn't find DEPLOY_DIR_IMAGE, exiting")
+                artifact_path = os.path.join(deploy_dir, kernel_image_file)
+                if not os.path.exists(artifact_path):
+                    raise WicError("Couldn't find %s file, exiting" % kernel_image_file)
+                shutil.copyfile("%s/%s" % (deploy_dir, kernel_image_file),
+                                "%s/hdd/boot/EFI/BOOT/bzImage-initramfs" % cr_workdir)
+
                 artifact_path = os.path.join(deploy_dir, "grub.cfg")
                 if not os.path.exists(artifact_path):
                   raise WicError("Couldn't find grub.cfg file, exiting")
