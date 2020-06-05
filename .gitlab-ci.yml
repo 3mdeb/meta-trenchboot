@@ -1,5 +1,6 @@
 stages:
   - build
+  - build_uefi
   - test
 
 build:
@@ -15,6 +16,7 @@ build:
     - sed -e "s@<YOCTO_HTTP_CACHE_IP>@$YOCTO_HTTP_CACHE_IP@" -i meta-trenchboot/kas-cache.yml
     - kas build meta-trenchboot/kas-pcetb-base.yml:meta-trenchboot/kas-cache.yml
     - kas build meta-trenchboot/kas-pcetb-xen.yml:meta-trenchboot/kas-cache.yml
+    - kas build meta-trenchboot/kas-pcetb-initramfs.yml:meta-trenchboot/kas-cache.yml
   after_script:
     - mkdir artifacts
     - echo "https://gitlab.com/trenchboot1/3mdeb/meta-trenchboot/-/jobs/$CI_JOB_ID/artifacts/download" > artifacts/artifacts_url.txt
@@ -22,10 +24,36 @@ build:
     - cp ../build/tmp/deploy/images/pcengines-apu2/xen-tb-dom0-image-pcengines-apu2.wic.gz artifacts
     - cp ../build/tmp/deploy/images/pcengines-apu2/tb-minimal-image-pcengines-apu2.wic.bmap artifacts
     - cp ../build/tmp/deploy/images/pcengines-apu2/xen-tb-dom0-image-pcengines-apu2.wic.bmap artifacts
+    - cp ../build/tmp/deploy/images/pcengines-apu2/bzImage artifacts
+    - cp ../build/tmp/deploy/images/pcengines-apu2/tb-minimal-initramfs-image-pcengines-apu2.cpio.gz artifacts
     - time rsync -av -e "ssh -i $YOCTO_HTTP_CACHE_RSYNC_KEY -o StrictHostKeyChecking=no" ../build/downloads $YOCTO_HTTP_CACHE_USER@$YOCTO_HTTP_CACHE_IP:$YOCTO_CACHE_PATH
     - time rsync -av -e "ssh -i $YOCTO_HTTP_CACHE_RSYNC_KEY -o StrictHostKeyChecking=no" ../build/sstate-cache $YOCTO_HTTP_CACHE_USER@$YOCTO_HTTP_CACHE_IP:$YOCTO_CACHE_PATH
   artifacts:
     name: "meta-trenchboot-${CI_COMMIT_SHA::12}"
+    paths:
+      - artifacts/*
+
+build_uefi:
+  image: kasproject/kas:2.0
+  stage: build
+  tags:
+    - local
+    - build
+  timeout: 6h
+  cache: {}
+  script:
+    - cd ..
+    - sed -e "s@<YOCTO_HTTP_CACHE_IP>@$YOCTO_HTTP_CACHE_IP@" -i meta-trenchboot/kas-cache.yml
+    - kas build meta-trenchboot/kas-generictb-base.yml:meta-trenchboot/kas-cache.yml
+  after_script:
+    - mkdir artifacts
+    - echo "https://gitlab.com/trenchboot1/3mdeb/meta-trenchboot/-/jobs/$CI_JOB_ID/artifacts/download" > artifacts/artifacts_url.txt
+    - cp ../build/tmp/deploy/images/genericx86-64/tb-minimal-efi-image-genericx86-64.wic.gz artifacts
+    - cp ../build/tmp/deploy/images/genericx86-64/tb-minimal-efi-image-genericx86-64.wic.bmap artifacts
+    - time rsync -av -e "ssh -i $YOCTO_HTTP_CACHE_RSYNC_KEY -o StrictHostKeyChecking=no" ../build/downloads $YOCTO_HTTP_CACHE_USER@$YOCTO_HTTP_CACHE_IP:$YOCTO_CACHE_PATH
+    - time rsync -av -e "ssh -i $YOCTO_HTTP_CACHE_RSYNC_KEY -o StrictHostKeyChecking=no" ../build/sstate-cache $YOCTO_HTTP_CACHE_USER@$YOCTO_HTTP_CACHE_IP:$YOCTO_CACHE_PATH
+  artifacts:
+    name: "meta-trenchboot-uefi${CI_COMMIT_SHA::12}"
     paths:
       - artifacts/*
 

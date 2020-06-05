@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/git/COPYING;md5=4641e94ec96f98fabc56ff9cc4
 SRC_URI = "git://github.com/TrenchBoot/landing-zone.git;protocol=https;branch=master"
 SRCREV = "2750c7b50d9d845887fad2bce3afe61f25da8505"
 
+TUNE_CCARGS_remove = "-msse3 -mfpmath=sse"
 
 DEPENDS = "util-linux-native"
 RDEPENDS_${PN} = "bash"
@@ -31,6 +32,6 @@ do_deploy() {
     install -m 0600 ${S}/lz_header.bin ${DEPLOYDIR}
 }
 
-FILES_${PN} += "${bindir}/landing-zone"
+FILES_${PN} += "${bindir}/landing-zone /boot"
 
 addtask do_deploy after do_compile before do_build

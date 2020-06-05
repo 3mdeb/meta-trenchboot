@@ -1,6 +1,7 @@
+require recipes-core/images/core-image-minimal.bb
+
 IMAGE_INSTALL_append = " \
   kernel-modules \
-  xen-misc \
   tpm2-tools \
   tpm2-abrmd \
   tpm2-tss \
@@ -8,15 +9,11 @@ IMAGE_INSTALL_append = " \
   libtss2-mu \
   libtss2-tcti-device \
   libtss2-tcti-mssim \
-  grub-tb-common \
-  lvm2 \
-  bridge-utils \
-  openvswitch \
-  dhcp-client \
-  netcat \
   landing-zone \
-  "
-
-IMAGE_ROOTFS_EXTRA_SPACE = "2097152"
+  grub-efi \
+  dhcp-client \
+  ipxe \
+"
 
 IMAGE_FSTYPES += "wic.gz wic.bmap"
+IMAGE_FEATURES_append = " ssh-server-openssh"
