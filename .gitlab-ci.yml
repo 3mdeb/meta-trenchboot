@@ -84,3 +84,56 @@ test_boot_apu2:
       - testing-trenchboot/report.html
       - testing-trenchboot/output.xml
     when: always
+
+test_boot_asrock:
+  image:
+    name: 3mdeb/rf-docker:0.4.2
+    entrypoint: [""]
+  stage: test
+  tags:
+    - local
+    - test
+  cache: {}
+  before_script:
+    - git clone https://github.com/3mdeb/testing-trenchboot
+    - cd testing-trenchboot
+    - git show HEAD
+    - git submodule sync
+    - git submodule update --init
+  script:
+    - export ARTIFACTS_URL=$(cat ../artifacts/artifacts_url.txt)
+    - robot -L TRACE -v rte_ip:$RTE_IP_1000V -v config:asrock -v artifacts_link:$ARTIFACTS_URL os/yocto_install.robot
+  artifacts:
+    paths:
+      - testing-trenchboot/log.html
+      - testing-trenchboot/report.html
+      - testing-trenchboot/output.xml
+    when: always
+
+test_boot_supermicro:
+  image:
+    name: 3mdeb/rf-docker:0.4.2
+    # https://docs.gitlab.com/ee/ci/docker/using_docker_images.html#overriding-the-entrypoint-of-an-image
+    # https://gitlab.com/gitlab-org/gitlab-runner/-/issues/2692
+    # use EMPTY ENTRYPOINT for docker >17.06
+    entrypoint: [""]
+  stage: test
+  tags:
+    - local
+    - test
+  cache: {}
+  before_script:
+    - git clone https://github.com/3mdeb/testing-trenchboot
+    - cd testing-trenchboot
+    - git show HEAD
+    - git submodule sync
+    - git submodule update --init
+  script:
+    - export ARTIFACTS_URL=$(cat ../artifacts/artifacts_url.txt)
+    - robot -L TRACE -v rte_ip:$RTE_IP_SUPERMICRO -v config:supermicro -v artifacts_link:$ARTIFACTS_URL os/yocto_install.robot
+  artifacts:
+    paths:
+      - testing-trenchboot/log.html
+      - testing-trenchboot/report.html
+      - testing-trenchboot/output.xml
+    when: always
