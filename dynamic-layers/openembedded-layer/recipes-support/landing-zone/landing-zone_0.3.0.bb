@@ -5,7 +5,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/git/COPYING;md5=4641e94ec96f98fabc56ff9cc48be14b"
 
 SRC_URI = "git://github.com/TrenchBoot/landing-zone.git;protocol=https;branch=master"
-SRCREV = "2750c7b50d9d845887fad2bce3afe61f25da8505"
+SRCREV = "4dc904bf70d6913a5706bdfc6f7781a9ff039d38"
 
 TUNE_CCARGS_remove = "-msse3 -mfpmath=sse"
 
