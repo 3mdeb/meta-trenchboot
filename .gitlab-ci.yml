@@ -46,16 +46,16 @@ build_uefi:
     - sed -e "s@<YOCTO_HTTP_CACHE_IP>@$YOCTO_HTTP_CACHE_IP@" -i meta-trenchboot/kas-cache.yml
     - kas build meta-trenchboot/kas-generictb-base.yml:meta-trenchboot/kas-cache.yml
   after_script:
-    - mkdir artifacts
-    - echo "https://gitlab.com/trenchboot1/3mdeb/meta-trenchboot/-/jobs/$CI_JOB_ID/artifacts/download" > artifacts/artifacts_url.txt
-    - cp ../build/tmp/deploy/images/genericx86-64/tb-minimal-efi-image-genericx86-64.wic.gz artifacts
-    - cp ../build/tmp/deploy/images/genericx86-64/tb-minimal-efi-image-genericx86-64.wic.bmap artifacts
+    - mkdir artifacts-uefi
+    - echo "https://gitlab.com/trenchboot1/3mdeb/meta-trenchboot/-/jobs/$CI_JOB_ID/artifacts/download" > artifacts-uefi/artifacts_url.txt
+    - cp ../build/tmp/deploy/images/genericx86-64/tb-minimal-efi-image-genericx86-64.wic.gz artifacts-uefi
+    - cp ../build/tmp/deploy/images/genericx86-64/tb-minimal-efi-image-genericx86-64.wic.bmap artifacts-uefi
     - time rsync -av -e "ssh -i $YOCTO_HTTP_CACHE_RSYNC_KEY -o StrictHostKeyChecking=no" ../build/downloads $YOCTO_HTTP_CACHE_USER@$YOCTO_HTTP_CACHE_IP:$YOCTO_CACHE_PATH
     - time rsync -av -e "ssh -i $YOCTO_HTTP_CACHE_RSYNC_KEY -o StrictHostKeyChecking=no" ../build/sstate-cache $YOCTO_HTTP_CACHE_USER@$YOCTO_HTTP_CACHE_IP:$YOCTO_CACHE_PATH
   artifacts:
     name: "meta-trenchboot-uefi${CI_COMMIT_SHA::12}"
     paths:
-      - artifacts/*
+      - artifacts-uefi/*
 
 test_boot_apu2:
   image:
@@ -101,7 +101,7 @@ test_boot_asrock:
     - git submodule sync
     - git submodule update --init
   script:
-    - export ARTIFACTS_URL=$(cat ../artifacts/artifacts_url.txt)
+    - export ARTIFACTS_URL=$(cat ../artifacts-uefi/artifacts_url.txt)
     - robot -L TRACE -v rte_ip:$RTE_IP_1000V -v config:asrock -v artifacts_link:$ARTIFACTS_URL os/yocto_install.robot
   artifacts:
     paths:
@@ -129,7 +129,7 @@ test_boot_supermicro:
     - git submodule sync
     - git submodule update --init
   script:
-    - export ARTIFACTS_URL=$(cat ../artifacts/artifacts_url.txt)
+    - export ARTIFACTS_URL=$(cat ../artifacts-uefi/artifacts_url.txt)
     - robot -L TRACE -v rte_ip:$RTE_IP_SUPERMICRO -v config:supermicro -v artifacts_link:$ARTIFACTS_URL os/yocto_install.robot
   artifacts:
     paths:
