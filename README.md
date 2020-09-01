@@ -1,18 +1,24 @@
-# WARNING
+# meta-trenchboot
 
-This is WIP repo and it is under development. Use it at your own risk. 
+[![pipeline status](https://gitlab.com/trenchboot1/3mdeb/meta-trenchboot/badges/master/pipeline.svg)](https://gitlab.com/trenchboot1/3mdeb/meta-trenchboot/-/commits/master)
+
+Meta layer for the Trenchboot purposes
+
+---
+
+## WARNING
+
+This is WIP repo and it is under development. Use it at your own risk.
 If you have use-cases for such thing to be developed, please submit
 an issue or PR with description of your needs / fixes.
 
-## meta-trenchboot
-
-Meta layer for the Trenchboot purposes
+---
 
 ## Building
 
 Make sure to adjust `~/ssh-keys` according to your configuration:
 
-```
+```bash
 SHELL=bash kas-docker --ssh-dir ~/ssh-keys build meta-trenchboot/kas-pcetb-base.yml
 ```
 
@@ -33,7 +39,7 @@ bmaptool copy --bmap tb-minimal-image-pcengines-apu2.wic.bmap tb-minimal-image-p
 
 Example output
 
-```bash
+```
 # bmaptool copy --bmap tb-minimal-image-pcengines-apu2.wic.bmap tb-minimal-image-pcengines-apu2.wic.gz /dev/sda
 bmaptool: info: block map format version 2.0
 bmaptool: info: 3163136 blocks of size 4096 (12.1 GiB), mapped 587526 blocks (2.2 GiB or 18.6%)
