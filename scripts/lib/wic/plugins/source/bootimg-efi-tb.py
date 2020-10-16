@@ -11,6 +11,7 @@
 #
 
 import logging
+import gzip
 import os
 import shutil
 
@@ -271,6 +272,37 @@ class BootimgEFIPlugin(SourcePlugin):
                 if os.path.exists(artifact_path):
                     shutil.copyfile("%s/ipxe.lkrn" % deploy_dir,
                                     "%s/hdd/boot/ipxe.lkrn" % cr_workdir)
+
+                # Xen EFI
+                artifact_path = os.path.join(
+                    deploy_dir,
+                    f"xen-{machine}.efi",
+                )
+                dest_path = os.path.join(
+                    cr_workdir,
+                    "hdd/boot/xen.efi",
+                )
+                if os.path.exists(artifact_path):
+                    shutil.copyfile(
+                        artifact_path,
+                        dest_path,
+                    )
+
+                # Xen
+                artifact_path = os.path.join(
+                    deploy_dir,
+                    f"xen-{machine}.gz",
+                )
+                dest_path = os.path.join(
+                    cr_workdir,
+                    "hdd/boot/xen",
+                )
+                if os.path.exists(artifact_path):
+                    with open(artifact_path, 'rb') as xen_compressed:
+                        xen = gzip.decompress(xen_compressed.read())
+                    with open(dest_path, 'wb') as f:
+                        f.write(xen)
+
                 for mod in [x for x in os.listdir(kernel_dir) if x.startswith("grub-efi-")]:
                     cp_cmd = "cp %s/%s %s/EFI/BOOT/%s" % (kernel_dir, mod, hdddir, mod[9:])
                     exec_cmd(cp_cmd, True)

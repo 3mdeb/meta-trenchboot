@@ -8,7 +8,7 @@ SRC_URI = "git://github.com/TrenchBoot/linux.git;protocol=https;branch=${KBRANCH
            file://defconfig \
            file://debug.cfg"
 
-SRC_URI_append_tb-efi = " file://efi.cfg"
+SRC_URI_append_tb-efi = " file://efi.cfg file://xen.cfg"
 SRC_URI_append_tb-xen = " file://xen.cfg"
 SRC_URI_append_pcengines-apux = " file://disable-graphics.cfg \
                                   file://edac.cfg"
