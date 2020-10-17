@@ -17,7 +17,6 @@ IMAGE_INSTALL_append = " \
   seabios \
   dhcp-client \
   xen-hypervisor \
-  safeboot \
 "
 
 IMAGE_ROOTFS_EXTRA_SPACE = "2097152"
