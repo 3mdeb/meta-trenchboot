@@ -114,9 +114,12 @@ class BootimgGrubTbPlugin(SourcePlugin):
             initrd = source_params.get('initrd')
 
             grub_conf = ""
-            grub_conf += "serial --unit=0 --speed=115200\n"
-            grub_conf += "terminal --timeout=%s serial\n" % bootloader.timeout
+            grub_conf += "serial --unit=0 --speed=115200 "
+            grub_conf += "--word=8 --parity=no --stop=1\n"
+            grub_conf += "terminal --timeout=5\n"
             grub_conf += "default=boot\n"
+            grub_conf += "terminal_input serial\n"
+            grub_conf += "terminal_output serial\n"
             grub_conf += "menuentry 'boot-xen' {\n"
 
             xen = "/xen"
@@ -165,9 +168,12 @@ class BootimgGrubTbPlugin(SourcePlugin):
             initrd = source_params.get('initrd')
 
             grub_conf = ""
-            grub_conf += "serial --unit=0 --speed=115200\n"
-            grub_conf += "terminal --timeout=%s serial\n" % bootloader.timeout
-            grub_conf += "default=boot\n"
+            grub_conf += "serial --unit=0 --speed=115200 "
+            grub_conf += "--word=8 --parity=no --stop=1\n"
+            grub_conf += "terminal --timeout=5\n"
+            grub_conf += "default=boot-xen\n"
+            grub_conf += "terminal_input serial\n"
+            grub_conf += "terminal_output serial\n"
             grub_conf += "menuentry 'boot' {\n"
 
             kernel = "/bzImage"
@@ -238,6 +244,14 @@ class BootimgGrubTbPlugin(SourcePlugin):
         hdddir = "%s/hdd/boot" % cr_workdir
         install_cmd = "install -m 0644 %s/bzImage %s/bzImage" % \
             (staging_kernel_dir, hdddir)
+        exec_cmd(install_cmd)
+
+        # Copying initrd
+        machine = get_bitbake_var("MACHINE")
+        image_name = get_bitbake_var("IMAGE_BASENAME")
+        initrd_name = f"{image_name}-{machine}.cpio"
+        install_cmd = "install -m 0644 %s/%s %s/%s" % \
+            (staging_kernel_dir, initrd_name, hdddir, initrd_name)
         exec_cmd(install_cmd)
 
         # Copying lz_header

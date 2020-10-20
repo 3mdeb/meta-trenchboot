@@ -11,7 +11,8 @@ SRC_URI = "git://github.com/TrenchBoot/linux.git;protocol=https;branch=${KBRANCH
 SRC_URI_append_tb-efi = " file://efi.cfg file://xen.cfg"
 SRC_URI_append_tb-xen = " file://xen.cfg"
 SRC_URI_append_pcengines-apux = " file://disable-graphics.cfg \
-                                  file://edac.cfg"
+                                  file://edac.cfg \
+                                  file://usb.cfg"
 
 LINUX_VERSION ?= "5.5.3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"

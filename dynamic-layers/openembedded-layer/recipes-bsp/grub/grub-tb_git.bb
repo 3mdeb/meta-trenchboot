@@ -4,7 +4,7 @@ BRANCH = "lz_tags"
 SRC_URI_remove = " ${GNU_MIRROR}/grub/grub-${PV}.tar.gz"
 SRC_URI_append = " git://github.com/3mdeb/grub.git;branch=${BRANCH};protocol=https"
 SRC_URI_append = " file://0001-add-root-flag-to-grub-bios-setup.patch"
-
+SRC_URI_append = " file://grub.cfg"
 S = "${WORKDIR}/git"
 
 SRCREV = "34ad354506843dc8cdbd07cafe1fd5d9e21c0ef8"
@@ -38,6 +38,7 @@ SECURITY_CFLAGS = ""
 
 do_configure_prepend() {
 (   cd ${S}
+    cp ${WORKDIR}/grub.cfg ${DEPLOY_DIR_IMAGE}
     ${S}/bootstrap
     ${S}/autogen.sh )
 }
