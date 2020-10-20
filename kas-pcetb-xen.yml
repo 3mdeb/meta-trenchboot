@@ -19,7 +19,7 @@ repos:
 
   meta-pcengines:
     url: https://github.com/3mdeb/meta-pcengines
-    refspec: ebb1bb765db100242880cf59c040ea575db7f125
+    refspec: d9654e68b5425456f09385373b8e0e2b888e95bc
 
 
 local_conf_header:
