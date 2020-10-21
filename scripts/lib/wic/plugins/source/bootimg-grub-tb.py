@@ -248,8 +248,7 @@ class BootimgGrubTbPlugin(SourcePlugin):
 
         # Copying initrd
         machine = get_bitbake_var("MACHINE")
-        image_name = get_bitbake_var("IMAGE_BASENAME")
-        initrd_name = f"{image_name}-{machine}.cpio"
+        initrd_name = f"core-image-minimal-initramfs-{machine}.cpio.gz"
         install_cmd = "install -m 0644 %s/%s %s/%s" % \
             (staging_kernel_dir, initrd_name, hdddir, initrd_name)
         exec_cmd(install_cmd)
