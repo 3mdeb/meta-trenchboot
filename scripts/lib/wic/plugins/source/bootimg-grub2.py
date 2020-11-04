@@ -38,78 +38,73 @@ class BootimgGrubTbPlugin(SourcePlugin):
         Check if dirname exists in default bootimg_dir or in STAGING_DIR.
         """
         for result in (bootimg_dir, get_bitbake_var("STAGING_DIR")):
-            if os.path.exists("%s/%s" % (result, dirname)):
+            if os.path.exists(os.path.join(result, dirname)):
                 return result
-
         raise WicError("Couldn't find correct bootimg_dir exiting")
-
 
     @classmethod
     def do_install_disk(cls, disk, disk_name, creator, workdir, oe_builddir,
                         bootimg_dir, kernel_dir, native_sysroot):
         """
         Called after all partitions have been prepared and assembled into a
-        disk image.  In this case, we install the MBR.
+        disk image. In this case, we install the MBR.
         """
-
         bootimg_dir = cls._get_bootimg_dir(bootimg_dir, 'syslinux')
-        mbrfile = "%s/syslinux/" % bootimg_dir
-        mbrfile += "mbr.bin"
+        mbrfile = os.path.join(bootimg_dir, "syslinux/mbr.bin")
 
         full_path = creator._full_path(workdir, disk_name, "direct")
-        logger.debug("Installing MBR on disk %s as %s with size %s bytes",
-                     disk_name, full_path, disk.min_size)
+        logger.debug(
+            f"Installing MBR on disk {disk_name} as {full_path}"
+            f" with size {disk.min_size} bytes"
+        )
 
-        device_map_path = "%s/device.map" % workdir
-        device_map_content = "(hd0) %s" % full_path
+        device_map_path = os.path.join(workdir, "device.map")
+        device_map_content = f"(hd0) {full_path}"
         with open(device_map_path, 'w') as file:
             file.write(device_map_content)
 
-        dd_cmd = "dd if=%s of=%s conv=notrunc" % (mbrfile, full_path)
+        dd_cmd = f"dd if={mbrfile} of={full_path} conv=notrunc"
         exec_cmd(dd_cmd, native_sysroot)
 
-        grub_dir = "%s/hdd/boot/grub/i386-pc" % workdir
-        cmd_bios_setup = 'grub-bios-setup -v --device-map=%s -r "hd0,msdos1" -d %s %s' % (
-                          device_map_path,
-                          grub_dir,
-                          full_path
-                          )
+        grub_dir = os.path.join(workdir, "hdd/boot/grub/i386-pc")
+        cmd_bios_setup = (
+            f'grub-bios-setup -v --device-map={device_map_path}'
+            f' -r "hd0,msdos1" -d {grub_dir} {full_path}'
+        )
         exec_cmd(cmd_bios_setup, native_sysroot)
 
     @classmethod
-    def do_install_core_image(cls, grubdir ,native_sysroot):
+    def _do_install_core_image(cls, grubdir, native_sysroot):
         """
         Create the core image in the grub directory.
         """
-        grub_modules = "at_keyboard biosdisk boot chain configfile ext2 fat linux ls part_msdos reboot serial vga"
-        cmd_mkimage = "grub-mkimage -p %s -d %s/i386-pc -o %s/i386-pc/core.img -O i386-pc %s" % (
-                       "(hd0,msdos1)/grub",
-                       grubdir,
-                       grubdir,
-                       grub_modules)
-
+        grub_modules = (
+            "at_keyboard biosdisk boot chain configfile ext2 fat"
+            " linux ls part_msdos reboot serial vga"
+        )
+        cmd_mkimage = (
+            f'grub-mkimage -p "(hd0,msdos1)/grub" -d {grubdir}/i386-pc'
+            f' -o {grubdir}/i386-pc/core.img -O i386-pc {grub_modules}'
+        )
         exec_cmd(cmd_mkimage)
 
     @classmethod
     def do_configure_grub_legacy(cls, hdddir, creator, cr_workdir,
                                  source_params):
         """
-        Check if custom config exists in deploy dir, if not create config file.
+        Check if custom config exists in deploy dir, if not it creates
+        the config file.
         """
-
-        # Create config file
-        bootloader = creator.ks.bootloader
-        hdddir = "%s/hdd/boot/grub" % cr_workdir
-
-        install_cmd = "install -d %s" % hdddir
+        hdddir = os.path.join(cr_workdir, "hdd/boot/grub")
+        install_cmd = f"install -d {hdddir}"
         exec_cmd(install_cmd)
 
         deploy_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
-        grub_cfg_dir = "%s/%s" % (deploy_dir, "grub.cfg")
-        xen_gz_dir = "%s/%s" % (deploy_dir, "xen.gz")
+        grub_cfg_dir = os.path.join(deploy_dir, "grub.cfg")
+        xen_gz_dir = os.path.join(deploy_dir, "xen.gz")
 
         if os.path.exists(grub_cfg_dir):
-            shutil.copyfile(grub_cfg_dir, "%s/grub.cfg" % hdddir)
+            shutil.copyfile(grub_cfg_dir, f"{hdddir}/grub.cfg")
         elif os.path.exists(xen_gz_dir):
             initrd = source_params.get('initrd')
 
@@ -138,7 +133,7 @@ class BootimgGrubTbPlugin(SourcePlugin):
                 % (kernel, rootdev, kernel_params)
 
             if initrd:
-                grub_conf += "  module2 initrd /%s\n" % initrd
+                grub_conf += "  module2 /%s\n" % initrd
 
             grub_conf += "}\n"
 
@@ -268,14 +263,14 @@ class BootimgGrubTbPlugin(SourcePlugin):
             install_cmd = "install -m 0644 %s/xen.gz %s/xen.gz" % \
                 (staging_kernel_dir, hdddir)
             exec_cmd(install_cmd)
-            # Uncompressing xen
+            # Uncompressed xen
             with gzip.open('%s/xen.gz' % hdddir, 'rb') as f_in:
                 with open('%s/xen' % hdddir, 'wb') as f_out:
                     shutil.copyfileobj(f_in, f_out)
 
         # Creating core.img
         grub_dir_hdd = "%s/grub" % hdddir
-        cls.do_install_core_image(grub_dir_hdd, native_sysroot)
+        cls._do_install_core_image(grub_dir_hdd, native_sysroot)
 
         # Counting size
         du_cmd = "du -bks %s" % hdddir

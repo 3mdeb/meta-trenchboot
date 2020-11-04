@@ -19,7 +19,7 @@ repos:
 
 local_conf_header:
   wks_file: |
-    WKS_FILE = "trenchboot-efi-image.wks"
+    WKS_FILE = "genericx86.wks"
   xen-version: |
     PREFERRED_VERSION_xen = "4.13%"
     IMAGE_BOOT_FILES = "bzImage xen.gz lz_header.bin"
