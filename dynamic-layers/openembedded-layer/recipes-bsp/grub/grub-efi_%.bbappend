@@ -1,4 +1,4 @@
-BRANCH = "trenchboot_support"
+BRANCH = "headers_redesign"
 SRC_URI_remove = " ${GNU_MIRROR}/grub/grub-${PV}.tar.gz"
 SRC_URI_append = " git://github.com/3mdeb/grub.git;branch=${BRANCH};protocol=https"
 
@@ -14,7 +14,7 @@ GRUB_BUILDIN = "boot linux ext2 fat serial part_msdos part_gpt normal \
                 efi_gop iso9660 configfile search loadenv test linux16 \
                 slaunch search_label"
 
-SRCREV = "01c6caa26bb2db0625d04379a34088fa25861a56"
+SRCREV = "c9f3d0c892c2553c3a354706fe21e07c8d2321b5"
 
 PV = "2.0.4-rc1+${SRCREV}"
 

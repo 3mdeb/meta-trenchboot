@@ -1,10 +1,10 @@
-KBRANCH = "linux-sl-5.5"
-SRCREV_machine = "eed5cdf480ee3761d18294d64ac7e2184229b51c"
+KBRANCH = "amd_event_log"
+SRCREV_machine = "d7e5f418460fd973dc6b655c00eb94d73da75b95"
 SRCREV_meta = "2c8ad5a6f5ac9c2cd9f0faa4655531113add4c4f"
 
 require recipes-kernel/linux/linux-yocto.inc
 
-SRC_URI = "git://github.com/TrenchBoot/linux.git;protocol=https;branch=${KBRANCH};name=machine; \
+SRC_URI = "git://github.com/3mdeb/linux.git;protocol=https;branch=${KBRANCH};name=machine; \
            file://defconfig \
            file://debug.cfg"
 
