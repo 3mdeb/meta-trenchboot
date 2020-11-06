@@ -18,18 +18,18 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/autogen.sh b/autogen.sh
-index ef43270..a7067a7 100755
+index 31b0ced7e..8b5004c5c 100755
 --- a/autogen.sh
 +++ b/autogen.sh
-@@ -13,7 +13,7 @@ fi
- export LC_COLLATE=C
+@@ -14,7 +14,7 @@ export LC_COLLATE=C
  unset LC_ALL
  
--find . -iname '*.[ch]' ! -ipath './grub-core/lib/libgcrypt-grub/*' ! -ipath './build-aux/*' ! -ipath './grub-core/lib/libgcrypt/src/misc.c' ! -ipath './grub-core/lib/libgcrypt/src/global.c' ! -ipath './grub-core/lib/libgcrypt/src/secmem.c'  ! -ipath './util/grub-gen-widthspec.c' ! -ipath './util/grub-gen-asciih.c' ! -ipath './gnulib/*' ! -iname './grub-core/lib/gnulib/*' |sort > po/POTFILES.in
+ find . -iname '*.[ch]' ! -ipath './grub-core/lib/libgcrypt-grub/*' ! -ipath './build-aux/*' ! -ipath './grub-core/lib/libgcrypt/src/misc.c' ! -ipath './grub-core/lib/libgcrypt/src/global.c' ! -ipath './grub-core/lib/libgcrypt/src/secmem.c'  ! -ipath './util/grub-gen-widthspec.c' ! -ipath './util/grub-gen-asciih.c' ! -ipath './gnulib/*' ! -ipath './grub-core/lib/gnulib/*' |sort > po/POTFILES.in
+-find util -iname '*.in' ! -name Makefile.in  |sort > po/POTFILES-shell.in
 +find . -iname '*.[ch]' ! -ipath './grub-core/lib/libgcrypt-grub/*' ! -ipath './build-aux/*' ! -ipath './grub-core/lib/libgcrypt/src/misc.c' ! -ipath './grub-core/lib/libgcrypt/src/global.c' ! -ipath './grub-core/lib/libgcrypt/src/secmem.c'  ! -ipath './util/grub-gen-widthspec.c' ! -ipath './util/grub-gen-asciih.c' ! -ipath './gnulib/*' ! -iname './grub-core/lib/gnulib/*' ! -path './.pc/*' |sort > po/POTFILES.in
- find util -iname '*.in' ! -name Makefile.in  |sort > po/POTFILES-shell.in
  
  echo "Importing unicode..."
+ ${PYTHON} util/import_unicode.py unicode/UnicodeData.txt unicode/BidiMirroring.txt unicode/ArabicShaping.txt grub-core/unidata.c
 -- 
-2.7.4
+2.25.1
 
