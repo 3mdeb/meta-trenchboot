@@ -12,6 +12,7 @@ IMAGE_INSTALL_append = " \
   landing-zone \
   grub-tb-common \
   dhcp-client \
+  cbmem \
 "
 
 WKS_FILE_DEPENDS_remove = "grub-efi"

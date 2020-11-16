@@ -6,10 +6,11 @@ require recipes-kernel/linux/linux-yocto.inc
 
 SRC_URI = "git://github.com/3mdeb/linux.git;protocol=https;branch=${KBRANCH};name=machine; \
            file://defconfig \
-           file://debug.cfg"
+           file://debug.cfg \
+           file://xen.cfg \
+           "
 
 SRC_URI_append_tb-efi = " file://efi.cfg"
-SRC_URI_append_tb-xen = " file://xen.cfg"
 SRC_URI_append_pcengines-apux = " file://disable-graphics.cfg \
                                   file://edac.cfg"
 
