@@ -12,10 +12,11 @@ IMAGE_INSTALL_append = " \
   landing-zone \
   grub-tb-common \
   dhcp-client \
+  cbmem \
 "
 
 WKS_FILE_DEPENDS_remove = "grub-efi"
 
-IMAGE_FSTYPES += "wic.gz wic.bmap"
+IMAGE_FSTYPES += "wic wic.gz wic.bmap"
 IMAGE_FEATURES_append = " ssh-server-openssh"
 do_image_wic[depends] += "landing-zone:do_deploy"

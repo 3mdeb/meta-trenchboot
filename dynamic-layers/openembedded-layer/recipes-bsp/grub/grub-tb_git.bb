@@ -1,13 +1,13 @@
 require recipes-bsp/grub/grub2.inc
 
-BRANCH = "trenchboot_support_2.04"
+BRANCH = "TB_SKINIT_upstream"
 SRC_URI_remove = " ${GNU_MIRROR}/grub/grub-${PV}.tar.gz"
-SRC_URI_append = " git://github.com/3mdeb/grub2.git;branch=${BRANCH};protocol=https"
+SRC_URI_append = " git://github.com/3mdeb/grub.git;branch=${BRANCH};protocol=https"
 SRC_URI_append = " file://0001-add-root-flag-to-grub-bios-setup.patch"
 
 S = "${WORKDIR}/git"
 
-SRCREV = "d6fa0d1f92446243e34e009361470f5730869ee9"
+SRCREV = "1a0cbebe77383036bd7cfcaec4d56b0c3a8fa912"
 
 PV = "2.0.4-rc1+${SRCREV}"
 

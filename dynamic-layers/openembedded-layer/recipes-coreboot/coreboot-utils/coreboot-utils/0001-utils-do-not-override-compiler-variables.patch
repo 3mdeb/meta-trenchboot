@@ -1,0 +1,35 @@
+rom 4f164d5f4ee8773045fe39302f75545088e125cc Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Norbert=20Kami=C5=84ski?= <norbert.kaminski@3mdeb.com>
+Date: Mon, 16 Nov 2020 11:05:52 +0100
+Subject: [PATCH] utils: do not override compiler variables
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Norbert Kamiński <norbert.kaminski@3mdeb.com>
+---
+ util/cbmem/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/util/cbmem/Makefile b/util/cbmem/Makefile
+index e67efaedae..bd3d1ee02c 100644
+--- a/util/cbmem/Makefile
++++ b/util/cbmem/Makefile
+@@ -3,13 +3,14 @@
+ 
+ PROGRAM   = cbmem
+ ROOT      = ../../src
+-CC       ?= $(CROSS_COMPILE)gcc
++CC       ?= $(CC)
+ INSTALL  ?= /usr/bin/env install
+ PREFIX   ?= /usr/local
+ CFLAGS   ?= -O2
+ CFLAGS   += -Wall -Wextra -Wmissing-prototypes -Werror
+ CPPFLAGS += -I . -I $(ROOT)/commonlib/include -I $(ROOT)/commonlib/bsd/include
+ CPPFLAGS += -include $(ROOT)/commonlib/bsd/include/commonlib/bsd/compiler.h
++LDFLAGS ?= $(LDFLAGS)
+ 
+ OBJS = $(PROGRAM).o
+ 
+-- 
+2.17.1
