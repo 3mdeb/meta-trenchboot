@@ -6,7 +6,7 @@ repos:
 
   poky:
     url: https://git.yoctoproject.org/git/poky
-    refspec: 5e1f52edb7a9f790fb6cb5d96502f3690267c1b1
+    refspec: d3ad6a22dbb8b9a21d7fe11bf437a20dea95ec81 
     layers:
       meta:
       meta-poky:
@@ -14,7 +14,7 @@ repos:
 
   meta-openembedded:
     url: http://git.openembedded.org/meta-openembedded
-    refspec: bb65c27a772723dfe2c15b5e1b27bcc1a1ed884c
+    refspec: 2a5c534d2b9f01e9c0f39701fccd7fc874945b1c
     layers:
       meta-oe:
       meta-networking:
@@ -23,13 +23,13 @@ repos:
 
   meta-security:
     url: https://git.yoctoproject.org/git/meta-security
-    refspec: ecd8c30af6b1b957b4fa814d3f25c40f060b3ac1
+    refspec: c74cc97641fd93e0e7a4383255e9a0ab3deaf9d7
     layers:
       meta-tpm:
 
   meta-selinux:
     url: https://git.yoctoproject.org/git/meta-selinux
-    refspec: 44d760413920ba440439b8bc7c2a71ca26cd7a2d
+    refspec: 7af62c91d7d00a260cf28e7908955539304d100d
 
   meta-trenchboot:
 

@@ -5,6 +5,7 @@ IMAGE_INSTALL_append = " \
   tpm2-tools \
   tpm2-abrmd \
   tpm2-tss \
+  tpm2-totp \
   libtss2 \
   libtss2-mu \
   libtss2-tcti-device \
@@ -13,8 +14,10 @@ IMAGE_INSTALL_append = " \
   grub-tb-common \
   dhcp-client \
   cbmem \
-  safeboot \
+  safeboot-precompiled \
 "
+
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS_remove = "grub"
 
 WKS_FILE_DEPENDS_remove = "grub-efi"
 

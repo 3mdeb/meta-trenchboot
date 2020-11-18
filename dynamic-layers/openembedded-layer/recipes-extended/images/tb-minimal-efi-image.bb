@@ -13,6 +13,9 @@ IMAGE_INSTALL_append = " \
   grub-efi \
   dhcp-client \
   ipxe \
+  cbmem \
+  safeboot-precompiled \
+  tpm2-totp \
 "
 
 IMAGE_FSTYPES += "wic.gz wic.bmap"
