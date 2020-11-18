@@ -15,9 +15,8 @@ IMAGE_INSTALL_append = " \
   dhcp-client \
   cbmem \
   safeboot-precompiled \
+  openssl \
 "
-
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS_remove = "grub"
 
 WKS_FILE_DEPENDS_remove = "grub-efi"
 

@@ -16,6 +16,8 @@ IMAGE_INSTALL_append = " \
   cbmem \
   safeboot-precompiled \
   tpm2-totp \
+  efitools \
+  opensc \
 "
 
 IMAGE_FSTYPES += "wic.gz wic.bmap"
