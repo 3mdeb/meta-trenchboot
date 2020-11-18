@@ -18,6 +18,7 @@ IMAGE_INSTALL_append = " \
   tpm2-totp \
   efitools \
   opensc \
+  sbsigntool \
 "
 
 IMAGE_FSTYPES += "wic.gz wic.bmap"

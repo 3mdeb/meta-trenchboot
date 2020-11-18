@@ -32,12 +32,17 @@ repos:
     url: https://git.yoctoproject.org/git/meta-selinux
     refspec: 7af62c91d7d00a260cf28e7908955539304d100d
 
-  meta-secure-core :
+  meta-secure-core:
     url: https://github.com/jiazhang0/meta-secure-core
     refspec: 628949305cdffff6798330d58e3d8c2bcf5c89f3
     layers:
+      meta:
       meta-signing-key:
       meta-efi-secure-boot:
+
+  meta-safeboot:
+    url: https://github.com/3mdeb/meta-safeboot
+    refspec: f3d9d7a65b363ce2d75b8f2d4f66703e46df0def
 
   meta-trenchboot:
 
