@@ -13,6 +13,11 @@ IMAGE_INSTALL_append = " \
   grub-tb-common \
   dhcp-client \
   cbmem \
+  safeboot \
+  tpm2-totp \
+  efitools \
+  opensc \
+  sbsigntool \
 "
 
 WKS_FILE_DEPENDS_remove = "grub-efi"
