@@ -47,7 +47,7 @@ repos:
 
   meta-safeboot:
     url: https://github.com/3mdeb/meta-safeboot
-    refspec: 4c63b3e8df32efd0fdd375c97efc9eff1fb3bcd2
+    refspec: 1c8bd018decd4318911703eb33a14cdf407c365d
 
   meta-trenchboot:
 
