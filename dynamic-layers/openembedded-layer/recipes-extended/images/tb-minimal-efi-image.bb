@@ -2,7 +2,7 @@ require recipes-core/images/core-image-minimal.bb
 
 IMAGE_INSTALL_append = " \
   packagegroup-tb-base \
-  packagegroup-tb-utils \
+  packagegroup-tb-core \
   grub-efi \
 "
 

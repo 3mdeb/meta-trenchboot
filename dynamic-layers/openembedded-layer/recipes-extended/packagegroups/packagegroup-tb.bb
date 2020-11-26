@@ -5,10 +5,10 @@ inherit packagegroup
 
 PACKAGES = " \
     ${PN}-base \
-    ${PN}-utils \
+    ${PN}-core \
 "
 
-RDEPENDS_${PN}-utils += "\
+RDEPENDS_${PN}-core += "\
     landing-zone \
     safeboot \
     cbmem \
