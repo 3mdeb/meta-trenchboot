@@ -20,6 +20,11 @@ repos:
       meta-networking:
       meta-filesystems:
       meta-python:
+      meta-perl:
+
+  meta-python2:
+    url: git://git.openembedded.org/meta-python2
+    refspec: 4400f9155ec193d028208cf0c66aeed2ba2b00ab
 
   meta-security:
     url: https://git.yoctoproject.org/git/meta-security
@@ -30,6 +35,19 @@ repos:
   meta-selinux:
     url: https://git.yoctoproject.org/git/meta-selinux
     refspec: 44d760413920ba440439b8bc7c2a71ca26cd7a2d
+
+  meta-secure-core:
+    url: https://github.com/jiazhang0/meta-secure-core
+    refspec: 628949305cdffff6798330d58e3d8c2bcf5c89f3
+    layers:
+      meta:
+      meta-tpm2:
+      meta-signing-key:
+      meta-efi-secure-boot:
+
+  meta-safeboot:
+    url: https://github.com/3mdeb/meta-safeboot
+    refspec: f58a4224be26df4895cc49f12f3a84e312dba580
 
   meta-trenchboot:
 
