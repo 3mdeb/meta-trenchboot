@@ -49,6 +49,10 @@ repos:
     url: https://github.com/3mdeb/meta-safeboot
     refspec: f58a4224be26df4895cc49f12f3a84e312dba580
 
+  meta-tpm-attestation:
+    url: https://github.com/3mdeb/meta-tpm-attestation
+    refspec: 23a80e3afd79280029a5c830ac414ec361105df6
+
   meta-trenchboot:
 
 
