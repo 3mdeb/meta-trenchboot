@@ -21,7 +21,3 @@ RDEPENDS_${PN}-base += "\
     dhcp-client \
     vim \
 "
-
-RDEPENDS_${PN}-virtualization += "\
-    ipxe \
-"
