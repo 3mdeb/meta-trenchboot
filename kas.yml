@@ -6,7 +6,7 @@ repos:
 
   poky:
     url: https://git.yoctoproject.org/git/poky
-    refspec: 5e1f52edb7a9f790fb6cb5d96502f3690267c1b1
+    refspec: ee68ae307fd951b9de6b31dc6713ea29186b7749
     layers:
       meta:
       meta-poky:
@@ -14,7 +14,7 @@ repos:
 
   meta-openembedded:
     url: http://git.openembedded.org/meta-openembedded
-    refspec: bb65c27a772723dfe2c15b5e1b27bcc1a1ed884c
+    refspec: 061b7fc74f887454251307ef119b808a90654d3f
     layers:
       meta-oe:
       meta-networking:
@@ -24,21 +24,21 @@ repos:
 
   meta-python2:
     url: git://git.openembedded.org/meta-python2
-    refspec: 4400f9155ec193d028208cf0c66aeed2ba2b00ab
+    refspec: 5243d509aebff378c1ae9d3dff6a29cfdc0dee1f
 
   meta-security:
     url: https://git.yoctoproject.org/git/meta-security
-    refspec: ecd8c30af6b1b957b4fa814d3f25c40f060b3ac1
+    refspec: fb77606aef461910db4836bad94d75758cc2688c
     layers:
       meta-tpm:
 
   meta-selinux:
     url: https://git.yoctoproject.org/git/meta-selinux
-    refspec: 44d760413920ba440439b8bc7c2a71ca26cd7a2d
+    refspec: f5e5031628fdad9b005e66abeb9259426850403f
 
   meta-secure-core:
     url: https://github.com/jiazhang0/meta-secure-core
-    refspec: 628949305cdffff6798330d58e3d8c2bcf5c89f3
+    refspec: 5d274050c7e188dfe222020bce7af58e8a5170e7
     layers:
       meta:
       meta-tpm2:
@@ -47,11 +47,11 @@ repos:
 
   meta-safeboot:
     url: https://github.com/3mdeb/meta-safeboot
-    refspec: f58a4224be26df4895cc49f12f3a84e312dba580
+    refspec: e337b36365ca1b3b971ac1e4fb46815ac26488d8
 
   meta-trenchboot-attestation:
     url: https://github.com/3mdeb/meta-trenchboot-attestation
-    refspec: 12720873f8cd0954004b5fe0bf732d568b9bfbb0
+    refspec: a6ac19a795e6849a521388a777727e10b625cb1f
 
   meta-trenchboot:
 

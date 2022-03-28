@@ -11,7 +11,7 @@ target:
 repos:
   meta-virtualization:
     url: https://git.yoctoproject.org/git/meta-virtualization
-    refspec: 561b597d4ba91dd36147e1af81bd1edc2d6636db
+    refspec: bd7511c53b921c9ce4ba2fdb42778ca194ebc3e8
     patches:
       dev86-srcuri-fix:
         repo: meta-trenchboot

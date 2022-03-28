@@ -12,4 +12,4 @@ target:
 repos:
   meta-pcengines:
     url: https://github.com/3mdeb/meta-pcengines
-    refspec: 5b7db8db952efa629022a63547f752ff44f49c06
+    refspec: 75b4f3f8fde5294862ebf6e3298c9889632c29df
