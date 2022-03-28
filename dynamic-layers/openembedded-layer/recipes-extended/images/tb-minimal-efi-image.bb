@@ -1,6 +1,6 @@
 require recipes-core/images/core-image-minimal.bb
 
-IMAGE_INSTALL_append = " \
+IMAGE_INSTALL:append = " \
   packagegroup-tb-base \
   packagegroup-tb-core \
   packagegroup-tb-virtualization \
@@ -8,4 +8,4 @@ IMAGE_INSTALL_append = " \
 "
 
 IMAGE_FSTYPES += "wic.gz wic.bmap"
-IMAGE_FEATURES_append = " ssh-server-openssh"
+IMAGE_FEATURES:append = " ssh-server-openssh"

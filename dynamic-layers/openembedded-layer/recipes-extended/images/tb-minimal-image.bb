@@ -1,13 +1,13 @@
 require recipes-core/images/core-image-minimal.bb
 
-IMAGE_INSTALL_append = " \
+IMAGE_INSTALL:append = " \
   packagegroup-tb-base \
   packagegroup-tb-core \
   grub-tb-common \
 "
 
-WKS_FILE_DEPENDS_remove = "grub-efi"
+WKS_FILE_DEPENDS:remove = "grub-efi"
 
 IMAGE_FSTYPES += "wic wic.gz wic.bmap"
-IMAGE_FEATURES_append = " ssh-server-openssh"
+IMAGE_FEATURES:append = " ssh-server-openssh"
 do_image_wic[depends] += "landing-zone:do_deploy"

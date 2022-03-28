@@ -10,7 +10,7 @@ SRC_URI += "gitsm://github.com/TrenchBoot/tpmlib.git;protocol=https;destsuffix=g
 SRCREV_landing-zone = "c9f3d0c892c2553c3a354706fe21e07c8d2321b5"
 SRCREV_tpmlib = "3e41e94fd4c17fe0d73d556501efa572346fb75a"
 
-TUNE_CCARGS_remove = "-msse3 -mfpmath=sse"
+TUNE_CCARGS:remove = "-msse3 -mfpmath=sse"
 
 DEPENDS = "util-linux-native"
 RDEPENDS_${PN} = "bash"
