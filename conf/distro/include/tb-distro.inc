@@ -17,6 +17,7 @@ DISTRO_FEATURES = " \
     systemd \
     usbgadget \
     usbhost \
+    tpm2 \
 "
 
 # disable sysvinit
