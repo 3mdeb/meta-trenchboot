@@ -2,6 +2,7 @@ require recipes-bsp/grub/grub2.inc
 
 BRANCH = "TB_SKINIT_upstream"
 SRC_URI:remove = " ${GNU_MIRROR}/grub/grub-${PV}.tar.gz"
+SRC_URI:remove = " file://0001-RISC-V-Restore-the-typcast-to-long.patch"
 SRC_URI:append = " git://github.com/3mdeb/grub.git;branch=${BRANCH};protocol=https"
 SRC_URI:append = " file://0001-add-root-flag-to-grub-bios-setup.patch"
 
