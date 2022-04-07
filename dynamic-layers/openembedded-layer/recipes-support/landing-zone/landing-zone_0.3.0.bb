@@ -13,7 +13,7 @@ SRCREV_tpmlib = "3e41e94fd4c17fe0d73d556501efa572346fb75a"
 TUNE_CCARGS:remove = "-msse3 -mfpmath=sse"
 
 DEPENDS = "util-linux-native"
-RDEPENDS_${PN} = "bash"
+RDEPENDS:${PN} = "bash"
 
 S = "${WORKDIR}/git"
 
@@ -35,6 +35,6 @@ do_deploy() {
     install -m 0600 ${S}/lz_header.bin ${DEPLOYDIR}
 }
 
-FILES_${PN} += "${bindir}/landing-zone /boot"
+FILES:${PN} += "${bindir}/landing-zone /boot"
 
 addtask do_deploy after do_compile before do_build

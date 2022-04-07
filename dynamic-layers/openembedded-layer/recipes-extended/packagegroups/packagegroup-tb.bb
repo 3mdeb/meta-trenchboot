@@ -9,15 +9,14 @@ PACKAGES = " \
     ${PN}-virtualization \
 "
 
-RDEPENDS_${PN}-core += "\
+RDEPENDS:${PN}-core += "\
     landing-zone \
     safeboot \
     cbmem \
     charra \
 "
 
-RDEPENDS_${PN}-base += "\
+RDEPENDS:${PN}-base += "\
     kernel-modules \
-    dhcp-client \
     vim \
 "

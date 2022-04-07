@@ -1,3 +1,3 @@
-RDEPENDS_${PN}-virtualization += "\
+RDEPENDS:${PN}-virtualization += "\
     ipxe \
 "
