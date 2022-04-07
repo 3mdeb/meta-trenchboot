@@ -12,14 +12,14 @@ SRCREV = "1a0cbebe77383036bd7cfcaec4d56b0c3a8fa912"
 
 PV = "2.0.4-rc1+${SRCREV}"
 
-RDEPENDS_${PN}-common += "${PN}-editenv"
-RDEPENDS_${PN} += "diffutils freetype ${PN}-common"
+RDEPENDS:${PN}-common += "${PN}-editenv"
+RDEPENDS:${PN} += "diffutils freetype ${PN}-common"
 
-RPROVIDES_${PN}-editenv += "${PN}-efi-editenv"
+RPROVIDES:${PN}-editenv += "${PN}-efi-editenv"
 
 PACKAGES =+ "${PN}-editenv ${PN}-common"
-FILES_${PN}-editenv = "${bindir}/grub-editenv"
-FILES_${PN}-common = " \
+FILES:${PN}-editenv = "${bindir}/grub-editenv"
+FILES:${PN}-common = " \
     ${bindir} \
     ${sysconfdir} \
     ${sbindir} \
@@ -28,7 +28,7 @@ FILES_${PN}-common = " \
     ${libdir}/grub/i386-pc \
 "
 
-FILES_${PN}-common:append:aarch64 = " \
+FILES:${PN}-common:append:aarch64 = " \
     ${libdir}${BPN} \
 "
 

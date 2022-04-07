@@ -17,7 +17,7 @@ SRC_URI:append:pcengines-apux = " file://disable-graphics.cfg \
                                   file://edac.cfg"
 
 LINUX_VERSION ?= "5.13.0"
-LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
+LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 DEPENDS += "${@bb.utils.contains('ARCH', 'x86', 'elfutils-native', '', d)}"
 DEPENDS += "openssl-native util-linux-native"
