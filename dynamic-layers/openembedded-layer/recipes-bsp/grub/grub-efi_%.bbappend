@@ -1,6 +1,6 @@
-BRANCH = "TB_SKINIT_upstream"
+BRANCH = "trenchboot_support_2.04"
 SRC_URI:remove = " ${GNU_MIRROR}/grub/grub-${PV}.tar.gz"
-SRC_URI:append = " git://github.com/3mdeb/grub.git;branch=${BRANCH};protocol=https"
+SRC_URI:append = " git://github.com/TrenchBoot/grub.git;branch=${BRANCH};protocol=https"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
@@ -17,9 +17,9 @@ GRUB_BUILDIN = "boot linux ext2 fat serial part_msdos part_gpt normal \
                 efi_gop iso9660 configfile search loadenv test linux16 \
                 slaunch search_label multiboot2"
 
-SRCREV = "1a0cbebe77383036bd7cfcaec4d56b0c3a8fa912"
+SRCREV = "9b6eb9d574dfb3bc04f83232d6f730490c5cb252"
 
-PV = "2.0.4-rc1+${SRCREV}"
+PV = "2.0.x-slaunch+${SRCREV}"
 
 do_configure:prepend() {
 (   cd ${S}
