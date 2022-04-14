@@ -10,7 +10,7 @@ PACKAGES = " \
 "
 
 RDEPENDS:${PN}-core += "\
-    landing-zone \
+    secure-kernel-loader \
     safeboot \
     cbmem \
     charra \

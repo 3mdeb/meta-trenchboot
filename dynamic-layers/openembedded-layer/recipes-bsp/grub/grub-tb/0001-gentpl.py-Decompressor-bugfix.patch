@@ -1,0 +1,25 @@
+From c02280055d26708d9bdf35bd6b4ad7f31cbf9f15 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20Kotyla?= <michal.kotyla@3mdeb.com>
+Date: Wed, 13 Apr 2022 17:22:54 +0200
+Subject: [PATCH] gentpl.py: Decompressor bugfix
+
+based on https://www.mail-archive.com/grub-devel@gnu.org/msg29840.html
+---
+ gentpl.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gentpl.py b/gentpl.py
+index 387588c05..6909cc832 100644
+--- a/gentpl.py
++++ b/gentpl.py
+@@ -766,7 +766,7 @@ def image(defn, platform):
+ if test x$(TARGET_APPLE_LINKER) = x1; then \
+   $(MACHO2IMG) $< $@; \
+ else \
+-  $(TARGET_OBJCOPY) $(""" + cname(defn) + """_OBJCOPYFLAGS) --strip-unneeded -R .note -R .comment -R .note.gnu.build-id -R .MIPS.abiflags -R .reginfo -R .rel.dyn -R .note.gnu.gold-version -R .ARM.exidx $< $@; \
++    $(TARGET_OBJCOPY) $(""" + cname(defn) + """_OBJCOPYFLAGS) --strip-unneeded -R .note -R .comment -R .note.gnu.build-id -R .MIPS.abiflags -R .reginfo -R .rel.dyn -R .note.gnu.gold-version -R .note.gnu.property -R .ARM.exidx $< $@; \
+ fi
+ """)
+ 
+-- 
+2.25.1

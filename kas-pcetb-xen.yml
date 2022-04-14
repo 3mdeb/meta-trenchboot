@@ -26,4 +26,4 @@ local_conf_header:
   xen-version: |
     PREFERRED_VERSION_xen = "4.13%"
     WKS_FILE = "trenchboot-image.wks"
-    IMAGE_BOOT_FILES = "bzImage xen.gz lz_header.bin"
+    IMAGE_BOOT_FILES = "bzImage xen.gz skl.bin"
