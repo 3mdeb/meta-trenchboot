@@ -12,6 +12,10 @@ This is WIP repo and it is under development. Use it at your own risk.
 If you have use-cases for such thing to be developed, please submit
 an issue or PR with description of your needs / fixes.
 
+After upgrade to Yocto honister build configurations from `meta-trenchboot` was
+not tested and may need additional work (e.g adopting patches to new version of
+sources).
+
 ---
 
 ## Building
