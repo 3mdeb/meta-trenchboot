@@ -1,3 +1,3 @@
-FILESEXTRAPATHS_prepend_tb-efi := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend:tb-efi := "${THISDIR}/files:"
 
 hostname = "tb"

@@ -1,6 +1,6 @@
 require recipes-extended/images/xen-image-minimal.bb
 
-IMAGE_INSTALL_append = " \
+IMAGE_INSTALL:append = " \
   kernel-modules \
   coreutils \
   xen-misc \
@@ -11,18 +11,18 @@ IMAGE_INSTALL_append = " \
   libtss2-mu \
   libtss2-tcti-device \
   libtss2-tcti-mssim \
-  landing-zone \
+  secure-kernel-loader \
   grub-tb-common \
   bridge-utils \
   seabios \
   dhcp-client \
 "
 
-WKS_FILE_DEPENDS_remove = "grub-efi"
+WKS_FILE_DEPENDS:remove = "grub-efi"
 
 IMAGE_ROOTFS_EXTRA_SPACE = "2097152"
 IMAGE_FSTYPES += "wic.gz wic.bmap"
-do_image_wic[depends] += "landing-zone:do_deploy"
+do_image_wic[depends] += "secure-kernel-loader:do_deploy"
 
 build_syslinux_cfg () {
         echo "ALLOWOPTIONS 1" > ${SYSLINUX_CFG}
