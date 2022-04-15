@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/git/COPYING;md5=4641e94ec96f98fabc56ff9cc4
 SRC_URI = "git://github.com/TrenchBoot/secure-kernel-loader.git;protocol=https;branch=master;name=secure-kernel-loader"
 SRC_URI += "gitsm://github.com/TrenchBoot/tpmlib.git;protocol=https;destsuffix=git/tpmlib;name=tpmlib"
 
+SRC_URI:append = " file://0001-main.c-IOMMU-flushing-inifnity-loop-workaround.patch"
+
 SRCREV_secure-kernel-loader = "3432f4398652727f402b710c2fea4e3f1efecce6"
 SRCREV_tpmlib = "3e41e94fd4c17fe0d73d556501efa572346fb75a"
 
