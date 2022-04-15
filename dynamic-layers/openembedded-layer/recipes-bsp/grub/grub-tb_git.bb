@@ -1,11 +1,11 @@
 require recipes-bsp/grub/grub2.inc
 
-BRANCH = "tpm_event_log_support"
+BRANCH = "master"
 SRC_URI:remove = " ${GNU_MIRROR}/grub/grub-${PV}.tar.gz"
 SRC_URI:remove = " file://0001-RISC-V-Restore-the-typcast-to-long.patch"
 
 SRC_URI = "\
-            git://github.com/3mdeb/grub.git;branch=${BRANCH};protocol=https \
+            git://github.com/TrenchBoot/grub.git;branch=${BRANCH};protocol=https \
             file://0001-add-root-flag-to-grub-bios-setup.patch \
             file://0001-autogen.sh-exclude-pc.patch \
             file://0001-Restore-umask-for-grub.cfg.patch \
@@ -14,9 +14,9 @@ SRC_URI = "\
 
 S = "${WORKDIR}/git"
 
-SRCREV = "4dfd376a2aac1045f467d7e0d70f37b3a6d82eeb"
+SRCREV = "c0e647eb0e2bd09315612446cb4d90f7f75cb44c"
 
-PV = "2.0.x-tpm+${SRCREV}"
+PV = "2.0.6-rc1+${SRCREV}"
 
 RDEPENDS:${PN}-common += "${PN}-editenv"
 RDEPENDS:${PN} += "diffutils freetype ${PN}-common"

@@ -1,6 +1,6 @@
-BRANCH = "tpm_event_log_support"
+BRANCH = "master"
 SRC_URI:remove = " ${GNU_MIRROR}/grub/grub-${PV}.tar.gz"
-SRC_URI:append = " git://github.com/3mdeb/grub.git;branch=${BRANCH};protocol=https"
+SRC_URI:append = " git://github.com/TrenchBoot/grub.git;branch=${BRANCH};protocol=https"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
@@ -17,9 +17,9 @@ GRUB_BUILDIN = "boot linux ext2 fat serial part_msdos part_gpt normal \
                 efi_gop iso9660 configfile search loadenv test linux16 \
                 slaunch search_label multiboot2"
 
-SRCREV = "4dfd376a2aac1045f467d7e0d70f37b3a6d82eeb"
+SRCREV = "c0e647eb0e2bd09315612446cb4d90f7f75cb44c"
 
-PV = "2.0.x-tpm+${SRCREV}"
+PV = "2.0.6-rc1+${SRCREV}"
 
 do_configure:prepend() {
 (   cd ${S}
