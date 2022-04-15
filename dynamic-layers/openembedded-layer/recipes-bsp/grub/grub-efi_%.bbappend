@@ -1,4 +1,4 @@
-BRANCH = "master"
+BRANCH = "trenchboot_support_2.04"
 SRC_URI:remove = " ${GNU_MIRROR}/grub/grub-${PV}.tar.gz"
 SRC_URI:append = " git://github.com/TrenchBoot/grub.git;branch=${BRANCH};protocol=https"
 
@@ -6,8 +6,10 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI += " \
     file://grub.cfg \
-    file://autogen.sh-exclude-pc-fixed.patch \
     "
+
+#    file://autogen.sh-exclude-pc-fixed.patch
+
 
 SRC_URI:remove = "file://autogen.sh-exclude-pc.patch"
 
@@ -17,7 +19,7 @@ GRUB_BUILDIN = "boot linux ext2 fat serial part_msdos part_gpt normal \
                 efi_gop iso9660 configfile search loadenv test linux16 \
                 slaunch search_label multiboot2"
 
-SRCREV = "c0e647eb0e2bd09315612446cb4d90f7f75cb44c"
+SRCREV = "9b6eb9d574dfb3bc04f83232d6f730490c5cb252"
 
 PV = "2.0.6-rc1+${SRCREV}"
 

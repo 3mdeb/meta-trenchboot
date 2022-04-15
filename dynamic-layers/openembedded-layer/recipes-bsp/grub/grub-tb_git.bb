@@ -1,20 +1,25 @@
 require recipes-bsp/grub/grub2.inc
 
-BRANCH = "master"
+BRANCH = "trenchboot_support_2.04"
 SRC_URI:remove = " ${GNU_MIRROR}/grub/grub-${PV}.tar.gz"
 SRC_URI:remove = " file://0001-RISC-V-Restore-the-typcast-to-long.patch"
 
 SRC_URI = "\
             git://github.com/TrenchBoot/grub.git;branch=${BRANCH};protocol=https \
             file://0001-add-root-flag-to-grub-bios-setup.patch \
-            file://0001-autogen.sh-exclude-pc.patch \
-            file://0001-Restore-umask-for-grub.cfg.patch \
             file://0001-gentpl.py-Decompressor-bugfix.patch \
 "
+#file://rootflag.patch
+
+#to work with grub tpm support 3mdeb branch:
+#file://0001-gentpl.py-Decompressor-bugfix.patch
+#file://0001-add-root-flag-to-grub-bios-setup.patch
+#file://0001-autogen.sh-exclude-pc.patch
+#file://0001-Restore-umask-for-grub.cfg.patch
 
 S = "${WORKDIR}/git"
 
-SRCREV = "c0e647eb0e2bd09315612446cb4d90f7f75cb44c"
+SRCREV = "9b6eb9d574dfb3bc04f83232d6f730490c5cb252"
 
 PV = "2.0.6-rc1+${SRCREV}"
 
