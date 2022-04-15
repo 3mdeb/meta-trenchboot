@@ -10,7 +10,6 @@ PACKAGES = " \
 "
 
 RDEPENDS:${PN}-core += "\
-    secure-kernel-loader \
     safeboot \
     cbmem \
     charra \
