@@ -7,16 +7,21 @@ SRC_URI:remove = " file://0001-RISC-V-Restore-the-typcast-to-long.patch"
 SRC_URI = "\
             git://github.com/3mdeb/grub.git;branch=${BRANCH};protocol=https \
             file://0001-add-root-flag-to-grub-bios-setup.patch \
-            file://0001-autogen.sh-exclude-pc.patch \
-            file://0001-Restore-umask-for-grub.cfg.patch \
             file://0001-gentpl.py-Decompressor-bugfix.patch \
 "
+#file://rootflag.patch
+
+#to work with grub tpm support 3mdeb branch:
+#file://0001-gentpl.py-Decompressor-bugfix.patch
+#file://0001-add-root-flag-to-grub-bios-setup.patch
+#file://0001-autogen.sh-exclude-pc.patch
+#file://0001-Restore-umask-for-grub.cfg.patch
 
 S = "${WORKDIR}/git"
 
 SRCREV = "4dfd376a2aac1045f467d7e0d70f37b3a6d82eeb"
 
-PV = "2.0.x-tpm+${SRCREV}"
+PV = "2.0.x-lz_tags-3mdeb+${SRCREV}"
 
 RDEPENDS:${PN}-common += "${PN}-editenv"
 RDEPENDS:${PN} += "diffutils freetype ${PN}-common"
