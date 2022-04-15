@@ -10,4 +10,4 @@ WKS_FILE_DEPENDS:remove = "grub-efi"
 
 IMAGE_FSTYPES += "wic wic.gz wic.bmap"
 IMAGE_FEATURES:append = " ssh-server-openssh"
-do_image_wic[depends] += "secure-kernel-loader:do_deploy"
+do_image_wic[depends] += "landing-zone:do_deploy"

@@ -262,11 +262,11 @@ class BootimgEFIPlugin(SourcePlugin):
 
                 shutil.copyfile("%s/hdd/boot/EFI/BOOT/grub.cfg" % cr_workdir,
                                 "%s/grub.cfg" % cr_workdir)
-                artifact_path = os.path.join(deploy_dir, "skl.bin")
+                artifact_path = os.path.join(deploy_dir, "lz_header.bin")
                 if not os.path.exists(artifact_path):
-                    raise WicError("Couldn't find skl.bin file, exiting")
-                shutil.copyfile("%s/skl.bin" % deploy_dir,
-                                "%s/hdd/boot/skl.bin" % cr_workdir)
+                    raise WicError("Couldn't find lz_header.bin file, exiting")
+                shutil.copyfile("%s/lz_header.bin" % deploy_dir,
+                                "%s/hdd/boot/lz_header.bin" % cr_workdir)
                 artifact_path = os.path.join(deploy_dir, "ipxe.lkrn")
                 if os.path.exists(artifact_path):
                     shutil.copyfile("%s/ipxe.lkrn" % deploy_dir,
