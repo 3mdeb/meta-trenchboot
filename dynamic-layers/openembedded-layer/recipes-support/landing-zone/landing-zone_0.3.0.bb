@@ -4,12 +4,12 @@ HOMEPAGE = "https://github.com/TrenchBoot/landing-zone"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/git/COPYING;md5=4641e94ec96f98fabc56ff9cc48be14b"
 
-SRC_URI = "git://github.com/3mdeb/landing-zone.git;protocol=https;branch=master;name=landing-zone"
+SRC_URI = "git://github.com/TrenchBoot/landing-zone.git;protocol=https;branch=master;name=landing-zone"
 SRC_URI += "gitsm://github.com/TrenchBoot/tpmlib.git;protocol=https;destsuffix=git/tpmlib;name=tpmlib"
 
-#SRC_URI:append = " file://0001-main.c-IOMMU-flushing-inifnity-loop-workaround.patch"
+SRC_URI:append = " file://0001-main.c-IOMMU-flushing-inifnity-loop-workaround.patch"
 
-SRCREV_landing-zone = "732d1933233578d763b74da98a99a46a3ec24c4a"
+SRCREV_landing-zone = "60bba229ae5dd12f29d205e02197313139d8ae3f"
 SRCREV_tpmlib = "3e41e94fd4c17fe0d73d556501efa572346fb75a"
 
 TUNE_CCARGS:remove = "-msse3 -mfpmath=sse"
