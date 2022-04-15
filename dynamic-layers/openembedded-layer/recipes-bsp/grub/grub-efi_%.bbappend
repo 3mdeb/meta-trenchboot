@@ -6,8 +6,10 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI += " \
     file://grub.cfg \
-    file://autogen.sh-exclude-pc-fixed.patch \
     "
+
+#    file://autogen.sh-exclude-pc-fixed.patch
+
 
 SRC_URI:remove = "file://autogen.sh-exclude-pc.patch"
 
@@ -19,7 +21,7 @@ GRUB_BUILDIN = "boot linux ext2 fat serial part_msdos part_gpt normal \
 
 SRCREV = "4dfd376a2aac1045f467d7e0d70f37b3a6d82eeb"
 
-PV = "2.0.x-tpm+${SRCREV}"
+PV = "2.0.x-lz_tags-3mdeb+${SRCREV}"
 
 do_configure:prepend() {
 (   cd ${S}
