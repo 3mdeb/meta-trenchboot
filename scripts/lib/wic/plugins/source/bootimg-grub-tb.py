@@ -124,7 +124,7 @@ class BootimgGrubTbPlugin(SourcePlugin):
             bootdev = "(hd0,msdos1)"
             dom0_conf = "dom0_mem=2G loglvl=all guest_loglvl=all"
             dom0_serial = "com1=115200,8n1 console=com1 no-real-mode"
-            rootdev = "/dev/sda2"
+            rootdev = "/dev/mmcblk0p2"
             kernel_params = "console=hvc0 earlyprintk=xen nomodeset"
 
             grub_conf += "  insmod part_msdos\n"
