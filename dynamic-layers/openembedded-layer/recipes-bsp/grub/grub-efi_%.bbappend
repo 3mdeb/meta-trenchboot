@@ -1,4 +1,4 @@
-BRANCH = "tpm_event_log_support"
+BRANCH = "indirect_skl"
 SRC_URI:remove = " ${GNU_MIRROR}/grub/grub-${PV}.tar.gz"
 SRC_URI:append = " git://github.com/3mdeb/grub.git;branch=${BRANCH};protocol=https"
 
@@ -19,9 +19,9 @@ GRUB_BUILDIN = "boot linux ext2 fat serial part_msdos part_gpt normal \
                 efi_gop iso9660 configfile search loadenv test linux16 \
                 slaunch search_label multiboot2"
 
-SRCREV = "4dfd376a2aac1045f467d7e0d70f37b3a6d82eeb"
+SRCREV = "b7c2702bd3b2d48827640711022aaabc088e5a49"
 
-PV = "2.0.x-lz_tags-3mdeb+${SRCREV}"
+PV = "indirect-skl+${SRCREV}"
 
 do_configure:prepend() {
 (   cd ${S}

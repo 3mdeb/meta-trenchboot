@@ -11,7 +11,7 @@ IMAGE_INSTALL:append = " \
   libtss2-mu \
   libtss2-tcti-device \
   libtss2-tcti-mssim \
-  landing-zone \
+  skl \
   grub-tb-common \
   bridge-utils \
   seabios \
@@ -22,7 +22,7 @@ WKS_FILE_DEPENDS:remove = "grub-efi"
 
 IMAGE_ROOTFS_EXTRA_SPACE = "2097152"
 IMAGE_FSTYPES += "wic.gz wic.bmap"
-do_image_wic[depends] += "landing-zone:do_deploy"
+do_image_wic[depends] += "skl:do_deploy"
 
 build_syslinux_cfg () {
         echo "ALLOWOPTIONS 1" > ${SYSLINUX_CFG}
