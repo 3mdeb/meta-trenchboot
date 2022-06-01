@@ -1,13 +1,12 @@
 require recipes-bsp/grub/grub2.inc
 
-BRANCH = "tpm_event_log_support"
+BRANCH = "indirect_skl"
 SRC_URI:remove = " ${GNU_MIRROR}/grub/grub-${PV}.tar.gz"
 SRC_URI:remove = " file://0001-RISC-V-Restore-the-typcast-to-long.patch"
 
 SRC_URI = "\
             git://github.com/3mdeb/grub.git;branch=${BRANCH};protocol=https \
             file://0001-add-root-flag-to-grub-bios-setup.patch \
-            file://0001-gentpl.py-Decompressor-bugfix.patch \
 "
 #file://rootflag.patch
 
@@ -19,9 +18,9 @@ SRC_URI = "\
 
 S = "${WORKDIR}/git"
 
-SRCREV = "4dfd376a2aac1045f467d7e0d70f37b3a6d82eeb"
+SRCREV = "b7c2702bd3b2d48827640711022aaabc088e5a49"
 
-PV = "2.0.x-lz_tags-3mdeb+${SRCREV}"
+PV = "indirect-skl+${SRCREV}"
 
 RDEPENDS:${PN}-common += "${PN}-editenv"
 RDEPENDS:${PN} += "diffutils freetype ${PN}-common"
