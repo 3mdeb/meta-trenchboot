@@ -15,13 +15,13 @@ index 7502079..39222c4 100644
 +++ b/include/iommu.h
 @@ -156,7 +156,7 @@ typedef struct __packed {
  } iommu_command_t;
- 
+
  extern char event_log[PAGE_SIZE];
 -extern iommu_command_t command_buf[2];
 +extern iommu_command_t command_buf[PAGE_SIZE / sizeof(iommu_command_t)];
- 
+
  void disable_memory_protection(void);
- 
+
 diff --git a/iommu.c b/iommu.c
 index fe99a25..6a81884 100644
 --- a/iommu.c
@@ -33,7 +33,7 @@ index fe99a25..6a81884 100644
 -iommu_command_t command_buf[2] __aligned(sizeof(iommu_command_t));
 +iommu_command_t command_buf[PAGE_SIZE / sizeof(iommu_command_t)] __page_data;
  char event_log[PAGE_SIZE] __page_data;
- 
+
  #ifdef DEBUG
 @@ -182,7 +182,7 @@ static void send_command(u64 *mmio_base, iommu_command_t cmd)
  	u32 cmd_ptr = mmio_base[IOMMU_MMIO_COMMAND_BUF_TAIL] >> 4;
@@ -42,12 +42,12 @@ index fe99a25..6a81884 100644
 -	mmio_base[IOMMU_MMIO_COMMAND_BUF_TAIL] = (cmd_ptr << 4);
 +	mmio_base[IOMMU_MMIO_COMMAND_BUF_TAIL] = (cmd_ptr << 4) & 0xfff;
  }
- 
+
  u32 iommu_load_device_table(u32 cap, volatile u64 *completed)
 @@ -224,29 +224,10 @@ u32 iommu_load_device_table(u32 cap, volatile u64 *completed)
  	print_u64(mmio_base[IOMMU_MMIO_DEVICE_TABLE_BA]);
  	print("IOMMU_MMIO_DEVICE_TABLE_BA\n");
- 
+
 -	/*
 -	 * !!! WARNING - HERE BE DRAGONS !!!
 -	 *
@@ -75,8 +75,8 @@ index fe99a25..6a81884 100644
 +	mmio_base[IOMMU_MMIO_COMMAND_BUF_BA] = (u64)_u(command_buf) | (0x8ULL << 56);
 +	mmio_base[IOMMU_MMIO_COMMAND_BUF_HEAD] = 0;
 +	mmio_base[IOMMU_MMIO_COMMAND_BUF_TAIL] = 0;
- 
+
  	print_u64(mmio_base[IOMMU_MMIO_COMMAND_BUF_BA]);
  	print("IOMMU_MMIO_COMMAND_BUF_BA\n");
--- 
+--
 2.30.2
