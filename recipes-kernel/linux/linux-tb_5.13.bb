@@ -9,12 +9,9 @@ SRC_URI = "git://github.com/TrenchBoot/linux.git;protocol=https;branch=${KBRANCH
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-5.14;destsuffix=${KMETA} \
            file://defconfig \
            file://debug.cfg \
-           file://xen.cfg \
+           file://efi.cfg \
+           file://tpm2.cfg \
            "
-
-SRC_URI:append:tb-efi = " file://efi.cfg"
-SRC_URI:append:pcengines-apux = " file://disable-graphics.cfg \
-                                  file://edac.cfg"
 
 LINUX_VERSION ?= "5.13"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
