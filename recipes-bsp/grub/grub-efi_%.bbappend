@@ -1,17 +1,16 @@
-BRANCH = "indirect_skl"
-SRC_URI:remove = " ${GNU_MIRROR}/grub/grub-${PV}.tar.gz"
-SRC_URI:append = " git://github.com/3mdeb/grub.git;branch=${BRANCH};protocol=https"
-
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-SRC_URI += " \
+SRC_URI = " \
+    git://github.com/3mdeb/grub.git;branch=${BRANCH};protocol=https \
+    file://cfg \
     file://grub.cfg \
-    "
+"
 
-#    file://autogen.sh-exclude-pc-fixed.patch
+DEPENDS:append = " grub-tb-native"
+DEPENDS:remove = " grub-native"
+RDEPENDS:${PN} = "grub-tb-common virtual-grub-bootconf"
 
-
-SRC_URI:remove = "file://autogen.sh-exclude-pc.patch"
+BRANCH = "indirect_skl"
 
 S = "${WORKDIR}/git"
 
@@ -24,9 +23,9 @@ SRCREV = "e553850a50e468490c633d7a56f99e502fe4f722"
 PV = "indirect-skl+${SRCREV}"
 
 do_configure:prepend() {
-(   cd ${S}
+    cd ${S}
     ${S}/bootstrap
-    ${S}/autogen.sh )
+    ${S}/autogen.sh
 }
 
 do_deploy:append:class-target() {
