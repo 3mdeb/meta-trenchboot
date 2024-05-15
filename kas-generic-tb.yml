@@ -4,11 +4,11 @@ header:
   includes:
     - kas/common.yml
 
-  distro: tb-distro
-  machine: genericx86-64
-  target:
-    - tb-minimal-image
+distro: tb-distro
+machine: genericx86-64
+target:
+  - tb-minimal-image
 
-  local_conf_header:
+local_conf_header:
   wks_file: |
     WKS_FILES = "trenchboot-image-efipluslegacy.wks"
