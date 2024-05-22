@@ -23,4 +23,4 @@ KCONFIG_MODE="--alldefconfig"
 
 PV = "${LINUX_VERSION}"
 
-COMPATIBLE_MACHINE_pcengines-apux = "pcengines-apux"
+COMPATIBLE_MACHINE:pcengines-apux = "pcengines-apux"

@@ -1,7 +1,7 @@
-DESCRIPTION = "Landing zone"
-HOMEPAGE = "https://github.com/TrenchBoot/skl"
+DESCRIPTION = "Open source implementation of Secure Loader for AMD Secure Startup."
+HOMEPAGE = "https://github.com/TrenchBoot/secure-kernel-loader"
 
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/git/COPYING;md5=4641e94ec96f98fabc56ff9cc48be14b"
 
 SRC_URI = "git://github.com/TrenchBoot/secure-kernel-loader.git;protocol=https;branch=master;name=skl"
