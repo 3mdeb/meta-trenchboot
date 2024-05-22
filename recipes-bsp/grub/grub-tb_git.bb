@@ -1,15 +1,15 @@
 require recipes-bsp/grub/grub2.inc
 
 SRC_URI = "\
-    git://github.com/3mdeb/grub.git;branch=${BRANCH};protocol=https \
+    git://github.com/TrenchBoot/grub.git;branch=${BRANCH};protocol=https \
     file://0001-add-root-flag-to-grub-bios-setup.patch \
 "
 
-BRANCH = "indirect_skl"
+BRANCH = "intel-txt-aem-2.06-rebased"
 
 S = "${WORKDIR}/git"
 
-SRCREV = "e553850a50e468490c633d7a56f99e502fe4f722"
+SRCREV = "f6dfae51de0fb810bd441889c499db0602934db5"
 
 PV = "${SRCREV}"
 

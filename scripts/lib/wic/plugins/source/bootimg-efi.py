@@ -485,7 +485,7 @@ class BootimgEFIPlugin(SourcePlugin):
                      part.mountpoint, blocks)
 
         # dosfs image, created by mkdosfs
-        bootimg = "%s/boot.img" % cr_workdir
+        bootimg = "%s/boot-efi.img" % cr_workdir
 
         label = part.label if part.label else "ESP"
 
