@@ -4,7 +4,8 @@ header:
 
 local_conf_header:
   cache_server_config: |
-    SSTATE_MIRRORS ?= "file://.* http://${LOCAL_PREMIRROR_SERVER}/sstate-cache/PATH"
-    SOURCE_MIRROR_URL ?= "http://${LOCAL_PREMIRROR_SERVER}/downloads"
-    INHERIT += "own-mirrors rm_work"
-    LOCAL_PREMIRROR_SERVER ?= "<YOCTO_HTTP_CACHE_IP>"
+    SSTATE_MIRRORS ?= "file://.* http://${LOCAL_PREMIRROR_SERVER}/${PROJECT_NAME}/sstate-cache/PATH"
+    SOURCE_MIRROR_URL ?= "http://${LOCAL_PREMIRROR_SERVER}/${PROJECT_NAME}/downloads"
+    INHERIT += "own-mirrors"
+    LOCAL_PREMIRROR_SERVER ?= "cache.dasharo.com/yocto"
+    PROJECT_NAME ?= "trenchboot"
