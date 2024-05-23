@@ -1,8 +1,5 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-DEPENDS:append = " grub-tb-native"
-DEPENDS:remove = " grub-native"
-
 SRC_URI = " \
            git://github.com/TrenchBoot/grub.git;branch=${BRANCH};protocol=https \
            file://cfg \
@@ -10,9 +7,11 @@ SRC_URI = " \
            "
 
 # nooelint: oelint.append.protvars
+PV = "2.06"
+
+# nooelint: oelint.append.protvars
 SRCREV = "f6dfae51de0fb810bd441889c499db0602934db5"
 S = "${WORKDIR}/git"
-RDEPENDS:${PN} = "grub-tb-common virtual-grub-bootconf"
 BRANCH = "intel-txt-aem-2.06-rebased"
 
 GRUB_BUILDIN = " \
