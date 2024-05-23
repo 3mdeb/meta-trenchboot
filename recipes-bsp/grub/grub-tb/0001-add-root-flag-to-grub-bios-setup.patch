@@ -33,7 +33,7 @@ index 7d7445af9815..dd76665dbd33 100644
 +		       const char *root, const char *dest, int force,
  		       int fs_probe, int allow_floppy,
  		       int add_rs_codes, int warn_short_mbr_gap);
- 
+
 diff --git a/util/grub-install.c b/util/grub-install.c
 index 53b464804288..3f08a93ec7e6 100644
 --- a/util/grub-install.c
@@ -46,7 +46,7 @@ index 53b464804288..3f08a93ec7e6 100644
 +				  NULL, install_drive, force,
  				  fs_probe, allow_floppy, add_rs_codes,
  				  !grub_install_is_short_mbrgap_supported ());
- 
+
 @@ -1784,7 +1784,7 @@ main (int argc, char *argv[])
  	if (install_bootsector)
  	  {
@@ -55,7 +55,7 @@ index 53b464804288..3f08a93ec7e6 100644
 +				   NULL, install_drive, force,
  				   fs_probe, allow_floppy,
  				   0 /* unused */, 0 /* unused */ );
- 
+
 diff --git a/util/grub-setup.c b/util/grub-setup.c
 index 1783224ddea8..05bc1ce3a71f 100644
 --- a/util/grub-setup.c
@@ -80,7 +80,7 @@ index 1783224ddea8..05bc1ce3a71f 100644
 @@ -178,6 +181,12 @@ argp_parser (int key, char *arg, struct argp_state *state)
          arguments->dev_map = xstrdup (arg);
          break;
- 
+
 +      case 'r':
 +	if (arguments->root_dev)
 +	  free (arguments->root_dev);
@@ -98,7 +98,7 @@ index 1783224ddea8..05bc1ce3a71f 100644
 +		   arguments.root_dev, dest_dev, arguments.force,
  		   arguments.fs_probe, arguments.allow_floppy,
  		   arguments.add_rs_codes, 0);
- 
+
 diff --git a/util/setup.c b/util/setup.c
 index 87a889ff7e3e..a19fe9a61331 100644
 --- a/util/setup.c
@@ -120,9 +120,9 @@ index 87a889ff7e3e..a19fe9a61331 100644
    grub_uint16_t core_sectors;
    grub_device_t root_dev = 0, dest_dev, core_dev;
 @@ -311,7 +310,10 @@ SETUP (const char *dir,
- 
+
    core_dev = dest_dev;
- 
+
 -  {
 +  if (root)
 +    root_dev = grub_device_open(root);
@@ -134,7 +134,7 @@ index 87a889ff7e3e..a19fe9a61331 100644
 @@ -324,6 +326,8 @@ SETUP (const char *dir,
  	char *drive;
  	grub_device_t try_dev;
- 
+
 +	if (root_dev)
 +	  break;
  	drive = grub_util_get_grub_dev (*cur);
@@ -154,6 +154,5 @@ index 87a889ff7e3e..a19fe9a61331 100644
    grub_device_close (root_dev);
  }
 -
--- 
+--
 2.44.0
-
