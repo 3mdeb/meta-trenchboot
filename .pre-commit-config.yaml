@@ -19,7 +19,9 @@ repos:
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: trailing-whitespace
+        exclude: .*\.patch$
       - id: mixed-line-ending
+        exclude: .*\.patch$
 
   - repo: https://github.com/talos-systems/conform
     rev: v0.1.0-alpha.30
@@ -44,3 +46,15 @@ repos:
     hooks:
       - id: shellcheck
         args: ["--severity=warning"]
+
+  - repo: https://github.com/zarhus/oelint-adv
+    rev: 949111ff4d256af759aa5d94db9d0fb444679b2
+    hooks:
+      - id: oelint-adv
+        args: [--rulefile=.oelint-ruleset.json, --hide=info, --quiet, --fix]
+        name: Advanced oelint
+        description: Based on the OpenEmbedded Styleguide and work done by oe-stylize-tool this module offers a (nearly) complete linter for bitbake-recipes.
+        entry: oelint-adv
+        language: python
+        language_version: python3
+        files: .*\.(bb)|(bbappend)|(bbclass)$
