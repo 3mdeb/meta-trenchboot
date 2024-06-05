@@ -7,8 +7,9 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/git/COPYING;md5=4641e94ec96f98fabc56ff9cc4
 
 DEPENDS = "util-linux-native"
 
-SRC_URI = "git://github.com/TrenchBoot/secure-kernel-loader.git;protocol=https;branch=master;name=skl"
-SRCREV = "597a840b95cf411d06c2f48cb97c8b679a3ce643"
+SRC_URI = "git://github.com/TrenchBoot/secure-kernel-loader.git;protocol=https;branch=${BRANCH};name=skl"
+BRANCH = "shrink_measured_size"
+SRCREV = "18f535843b22e784dbbc8e1ec11d8dc099b3d0fe"
 
 TUNE_CCARGS:remove = "-msse3 -mfpmath=sse"
 
@@ -16,8 +17,9 @@ S = "${WORKDIR}/git"
 FILES:${PN} += "${bindir}/skl /boot"
 RDEPENDS:${PN} = "bash"
 
-EXTRA_OEMAKE += "DEBUG=y 32=y"
+EXTRA_OEMAKE += "DEBUG=y"
 SECURITY_STACK_PROTECTOR = ""
+lcl_maybe_fortify = ""
 
 do_install(){
     install -d ${D}${bindir}/skl
