@@ -11,6 +11,7 @@ PACKAGES = " \
 RDEPENDS:${PN}-base += " \
                         kernel-modules \
                         skl \
+                        intel-sinit-acm \
                         "
 
 RDEPENDS:${PN}-utils += " \
