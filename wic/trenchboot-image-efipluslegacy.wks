@@ -1,4 +1,4 @@
-bootloader --timeout=0 --append=" rootwait"
+bootloader --configfile="grub.cfg"
 
 part /boot --source bootimg-biosplusefi --sourceparams="loader=grub-efi,loader-pcbios=grub" --ondisk sda --label boot --align 1024 --use-uuid --active --system-id 0xef
 part /     --source rootfs --fstype=ext4                                 --ondisk sda --label root --align 1024 --use-uuid --fixed-size 1024
