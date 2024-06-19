@@ -8,8 +8,8 @@ repos:
   meta-trenchboot:
 
   poky:
-    url: https://git.yoctoproject.org/git/poky
-    refspec: 4b07a5316ed4b858863dfdb7cab63859d46d1810
+    url: https://github.com/zarhus/poky.git
+    refspec: 8bd68e6bf77a2b90ac7332e545d6f9761e814878
     layers:
       meta:
       meta-poky:
