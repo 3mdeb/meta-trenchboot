@@ -202,6 +202,17 @@ To change branch or commit used by a recipe you have to change `BRANCH` or
 `SRCREV` variable in appropriate recipe file. In case of Linux kernel those
 variables are named `KBRANCH` and `SRCREV_machine`
 
+Below is list of recipe files for main TB components
+
+```text
+intel-sinit-acm - recipes-support/intel-sinit-acm/intel-sinit-acm_630744.bb
+skl - recipes-support/skl/skl_git.bb
+linux-tb - recipes-kernel/linux/linux-tb_6.6.bb
+grub & grub-efi (common parts) - recipes-bsp/grub/grub-tb-common.inc
+grub - recipes-bsp/grub/grub_%.bbappend
+grub-efi - recipes-bsp/grub/grub-efi_%.bbappend
+```
+
 ### Building modified source
 
 In order to make and test changes to source code you first need to enter kas
