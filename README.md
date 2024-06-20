@@ -18,38 +18,172 @@ sources).
 
 ---
 
-## Building
+## Prerequisites
 
-Make sure to adjust `~/ssh-keys` according to your configuration:
+* Linux PC (tested on `Fedora 39`)
 
-```bash
-SHELL=bash kas-docker --ssh-dir ~/ssh-keys build meta-trenchboot/kas-pcetb-base.yml
+* [docker](https://docs.docker.com/engine/install/fedora/) installed
+
+* [kas-container 3.0.2](https://raw.githubusercontent.com/siemens/kas/3.0.2/kas-container)
+  script downloaded and available in [PATH](https://en.wikipedia.org/wiki/PATH_(variable))
+
+    ```bash
+    wget -O ~/bin/kas-container https://raw.githubusercontent.com/siemens/kas/3.0.2/kas-container
+    chmod +x ~/bin/kas-container
+    ```
+
+* `meta-trenchboot` repository cloned
+
+    ```bash
+    mkdir yocto
+    cd yocto
+    git clone https://github.com/3mdeb/meta-trenchboot.git
+    ```
+
+* [bmaptool](https://docs.yoctoproject.org/dev-manual/bmaptool.html) installed
+
+    ```bash
+    sudo dnf install bmap-tools
+    ```
+
+    > You can also use `bmap-tools`
+    > [from github](https://github.com/yoctoproject/bmaptool) if it is not
+    > available in your distro.
+
+## Build
+
+* From `yocto` directory run:
+
+    ```shell
+    kas-container build meta-trenchboot/kas-generic-tb.yml
+    ```
+
+* Image build takes time, so be patient and after build's finish you should see
+something similar to (the exact tasks numbers may differ):
+
+    ```shell
+    Initialising tasks: 100% |###########################################################################################| Time: 0:00:01
+    Sstate summary: Wanted 360 Found 0 Missed 8 Current 1810 (0% match, 99% complete)
+    NOTE: Executing Tasks
+    NOTE: Tasks Summary: Attempted 4774 tasks of which 4749 didn't need to be rerun and all succeeded.
+    ```
+
+Thanks to publishing the build cache on cache.dasharo.com the time needed to
+finish the process should be significantly decreased.
+Using the cache is enabled in kas/cache.yml file and can be disabled by removing
+reference to this file in `kas/common.yml`:
+
+```yaml
+includes:
+    - cache.yml
 ```
 
-Change a directory to `build/tmp/deploy/images/pcengines-apu2`. Find the
-tb-minimal-image-pcengines-apu2 files with extensions wic.gz and wic.bmap.
-Copy them to the apu platform (for example through ssh or memory stick).
-At the platform, check device (`/dev/<dev>` ) of the drive to be flashed:
+This cache can decrease time needed to build image from scratch from hours to
+minutes depending on build machine and network connection.
 
-```bash
-fdisk -l
+```shell
+Sstate summary: Wanted 2170 Local 0 Mirrors 2151 Missed 19 Current 0 (99% match, 0% complete)
+NOTE: Executing Tasks
+NOTE: Tasks Summary: Attempted 4774 tasks of which 4445 didn't need to be rerun and all succeeded.
 ```
 
-Then flash the drive with bmap-tools:
+## Flash
 
-```bash
-bmaptool copy --bmap tb-minimal-image-pcengines-apu2.wic.bmap tb-minimal-image-pcengines-apu2.wic.gz /dev/<dev>
+To flash resulting image:
+
+* Find out your device name:
+
+    ```shell
+    $ lsblk
+    NAME                                     MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
+    sdx                                      179:0    0  14.8G  0 disk
+    ├─sdx1                                   179:1    0     4M  0 part
+    └─sdx2                                   179:2    0     4M  0 part
+    ```
+
+    In this case the device name is `/dev/sdx` **but be aware, in next steps
+    replace `/dev/sdx` with right device name on your platform or else you can
+    damage your system!.**
+
+* From where you ran image build type:
+
+    ```shell
+    cd build/tmp/deploy/images/genericx86-64/
+    sudo umount /dev/sdx*
+    sudo bmaptool copy tb-minimal-image-genericx86-64.rootfs.wic.gz /dev/sdx
+    ```
+
+    and you should see output similar to this (the exact size number may differ):
+
+    ```shell
+    bmaptool: info: block map format version 2.0
+    bmaptool: info: 275200 blocks of size 4096 (1.0 GiB), mapped 73240 blocks (286.1 MiB or 26.6%)
+    bmaptool: info: copying image 'tb-minimal-image-genericx86-64.rootfs.wic.gz' to block device '/dev/sdx' using bmap file 'tb-minimal-image-genericx86-64.rootfs.wic.bmap'
+    bmaptool: info: 100% copied
+    bmaptool: info: synchronizing '/dev/sdx'
+    bmaptool: info: copying time: 19.3s, copying speed 14.9 MiB/sec
+    ```
+
+## Booting
+
+To run TrenchBoot connect drive with flashed image to target platform and boot
+from it. In GRUB menu you can choose normal `boot` or `skl-boot`.
+
+```text
+                             GNU GRUB  version 2.06
+
+ +----------------------------------------------------------------------------+
+ |*boot                                                                       |
+ | skl-boot                                                                   |
+ |                                                                            |
+ |                                                                            |
+ |                                                                            |
+ +----------------------------------------------------------------------------+
+
+      Use the ^ and v keys to select which entry is highlighted.
+      Press enter to boot the selected OS, `e' to edit the commands
 ```
 
-Example output
+After a while you should see login prompt.
 
+```text
+early console in extract_kernel
+input_data: 0x0000000006801548
+input_len: 0x000000000121e953
+output: 0x0000000004600000
+output_len: 0x00000000033caee8
+kernel_total_size: 0x0000000003030000
+needed_size: 0x0000000003400000
+trampoline_32bit: 0x0000000000000000
+Physical KASLR using RDRAND RDTSC...
+Virtual KASLR using RDRAND RDTSC...
+
+Decompressing Linux... Parsing ELF... Performing relocations... done.
+Booting the kernel (entry_offset: 0x0000000000000000).
+
+
+Reference Yocto distro for PC Engines hardware 0.2.0 tb ttyS0
+
+tb login:
 ```
-# bmaptool copy --bmap tb-minimal-image-pcengines-apu2.wic.bmap tb-minimal-image-pcengines-apu2.wic.gz /dev/sda
-bmaptool: info: block map format version 2.0
-bmaptool: info: 3163136 blocks of size 4096 (12.1 GiB), mapped 587526 blocks (2.2 GiB or 18.6%)
-bmaptool: info: copying image 'tb-minimal-image-pcengines-apu2.wic.gz' to block device '/dev/sda' using bmap file 'tb-minimal-image-pcengines-apu2.wic.bmap'
-bmaptool: info: 97% copied
-bmaptool: info: 100% copied
-bmaptool: info: synchronizing '/dev/sda'
-bmaptool: info: copying time: 5m 30.3s, copying speed 6.9 MiB/sec
+
+To login use `root` account without password.
+
+## Running in QEMU
+
+It's possible to test image by running it in QEMU. Depending on QEMU
+configuration not all features may be available, SKL boot among others.
+
+To create bootable image you can once again use `bmaptool` but this time instead
+of writing image to flash device you write it to file
+
+```shell
+cd build/tmp/deploy/images/genericx86-64
+bmaptool copy tb-minimal-image-genericx86-64.rootfs.wic.gz trenchboot.img
+```
+
+After that you can start QEMU
+
+```shell
+qemu-system-x86_64 -serial stdio -drive file=trenchboot.img,if=virtio -enable-kvm
 ```
