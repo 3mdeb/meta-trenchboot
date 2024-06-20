@@ -182,6 +182,93 @@ qemu-system-x86_64 -serial stdio -enable-kvm \
     -drive file=tb-minimal-image-genericx86-64.rootfs.wic,if=virtio
 ```
 
+## Development
+
+Usually after making changes to recipes it's enough to just run [build](#build)
+again but sometimes not all changes are detected. In those cases you can clean
+changed recipe and then rebuild the project.
+
+```shell
+kas-container shell meta-trenchboot/kas-generic-tb.yml -c "bitbake -c cleansstate <recipes>"
+kas-container build meta-trenchboot/kas-generic-tb.yml
+```
+
+Replace `<recipes>` with name of changed recipes e.g. `skl`, `grub`,
+`linux-tb` and then rebuild.
+
+### Source revision
+
+To change branch or commit used by a recipe you have to change `BRANCH` or
+`SRCREV` variable in appropriate recipe file. In case of Linux kernel those
+variables are named `KBRANCH` and `SRCREV_machine`
+
+### Building modified source
+
+In order to make and test changes to source code you first need to enter kas
+shell
+
+```shell
+kas-container shell meta-trenchboot/kas-generic-tb.yml
+```
+
+After that use `devtool modify <recipe>` to fetch source code of recipe you want
+to work on. Bitbake will checkout branch and commit set by `BRANCH` and `SRCREV`
+variables.
+
+```shell
+devtool modify skl
+(...)
+INFO: Source tree extracted to /build/workspace/sources/skl
+INFO: Using source tree as build directory since that would be the default for this recipe
+INFO: Recipe skl now set up to build from /build/workspace/sources/skl
+```
+
+All recipes' sources you wish to modify will be in `/build/workspace/sources`.
+After modifications you can try to build recipe by using
+`devtool build <recipe>` or if you want to build whole image with your changes
+then use `devtool build-image tb-minimal-image`.
+After building image you can [flash](#flash) and [boot](#booting) it or run it
+in [QEMU](#running-in-qemu).
+
+### Saving changes
+
+Commit changes you want saved and then use `devtool update-recipe <recipe>`.
+Devtool should generate `.patch` file and save it in correct place and also
+update recipe file.
+
+```shell
+builder@2906c1d05d2c:/build/workspace/sources/skl$ devtool update-recipe skl
+(...)
+INFO: Adding new patch 0001-wip.patch
+INFO: Updating recipe skl_git.bb
+```
+
+#### GRUB
+
+In case of GRUB you should use `devtool update-recipe -a /repo -w <recipe>`
+where `<recipe>` is either `grub` or `grub-efi`. This is due to original
+recipe(`.bb` file) being defined in dfferent layer.
+
+```shell
+builder@2906c1d05d2c:/build/workspace/sources$ devtool update-recipe -a /repo -w grub-efi
+(...)
+Summary: There was 1 WARNING message.
+NOTE: Writing append file /repo/recipes-bsp/grub/grub-efi_%.bbappend
+NOTE: Copying 0001-wip.patch to /repo/recipes-bsp/grub/grub-efi/0001-wip.patch
+```
+
+### Local files
+
+Files added by Yocto recipe are stored inside `sources/<recipe>/oe-local-files`
+folder. When you use `devtool update-recipe` those files are automatically
+updated without committing them. Example of local file is `grub.cfg` in
+`grub-efi` recipe
+
+### Finishing
+
+To finish working on source use `devtool reset <recipe>`. After that recipe
+will be built normally.
+
 ## Funding
 
 This project is partially funded through
