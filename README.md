@@ -174,16 +174,10 @@ To login use `root` account without password.
 It's possible to test image by running it in QEMU. Depending on QEMU
 configuration not all features may be available, SKL boot among others.
 
-To create bootable image you can once again use `bmaptool` but this time instead
-of writing image to flash device you write it to file
+To start QEMU:
 
 ```shell
-cd build/tmp/deploy/images/genericx86-64
-bmaptool copy tb-minimal-image-genericx86-64.rootfs.wic.gz trenchboot.img
-```
-
-After that you can start QEMU
-
-```shell
-qemu-system-x86_64 -serial stdio -drive file=trenchboot.img,if=virtio -enable-kvm
+cd build/tmp/deploy/images/genericx86-64/
+qemu-system-x86_64 -serial stdio -enable-kvm \
+    -drive file=tb-minimal-image-genericx86-64.rootfs.wic,if=virtio
 ```
