@@ -260,6 +260,42 @@ directory before building recipe again.
 Files added by Yocto recipe are stored inside `sources/<recipe>/oe-local-files`
 folder. Example of local file is `defconfig` file in `linux-tb` recipe
 
+### Deployment
+
+To deploy component to target machine after making changes you can use rsync
+with path depending on component you modified. `<destination>` can be either
+`<USER>@<IP>:/` or path to mounted rootfs partition. Similarly,
+`<boot_destination>` is `<USER>@<IP>:/boot` or path to mounted boot partition.
+To deploy files via ssh you need to start/enable ssh server on target machine.
+
+* grub
+
+    ```shell
+    rsync -chavP --stats /build/tmp/work/core2-64-tb-linux/grub/2.06/image/ <destination>
+    ```
+
+* grub-efi
+
+    ```shell
+    rsync -chavP --stats /build/tmp/work/core2-64-tb-linux/grub-efi/2.06/image/ <destination>
+    ```
+
+* skl
+
+    ```shell
+    rsync -chavP --stats /build/tmp/work/core2-64-tb-linux/skl/git/image/ <destination>
+    rsync -chavP --stats /build/tmp/work/core2-64-tb-linux/skl/git/deploy-skl/skl.bin <boot_destination>
+    ```
+
+* linux-tb
+
+    ```shell
+    path_to_kernel="/build/tmp/work/genericx86_64-tb-linux/linux-tb/6.6.1"
+    rsync -chavP --stats --exclude "boot" "$path_to_kernel/image/" <destination>
+    scp "$path_to_kernel/deploy-linux-tb/bzImage-initramfs-genericx86-64.bin" <boot_destination>
+    scp "$path_to_kernel/deploy-linux-tb/bzImage-initramfs-genericx86-64.bin" <boot_destination>/bzImage
+    ```
+
 ### Finishing
 
 To finish working on source use `devtool reset <recipe>`. After that recipe
