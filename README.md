@@ -12,10 +12,6 @@ This is WIP repo and it is under development. Use it at your own risk.
 If you have use-cases for such thing to be developed, please submit
 an issue or PR with description of your needs / fixes.
 
-After upgrade to Yocto honister build configurations from `meta-trenchboot` was
-not tested and may need additional work (e.g adopting patches to new version of
-sources).
-
 ---
 
 ## Prerequisites
@@ -70,7 +66,7 @@ something similar to (the exact tasks numbers may differ):
 
 Thanks to publishing the build cache on cache.dasharo.com the time needed to
 finish the process should be significantly decreased.
-Using the cache is enabled in kas/cache.yml file and can be disabled by removing
+Using the cache is enabled in `kas/cache.yml` file and can be disabled by removing
 reference to this file in `kas/common.yml`:
 
 ```yaml
@@ -184,34 +180,36 @@ qemu-system-x86_64 -serial stdio -enable-kvm \
 
 ## Development
 
-Usually after making changes to recipes it's enough to just run [build](#build)
-again but sometimes not all changes are detected. In those cases you can clean
-changed recipe and then rebuild the project.
+### Main components
 
-```shell
-kas-container shell meta-trenchboot/kas-generic-tb.yml -c "bitbake -c cleansstate <recipes>"
-kas-container build meta-trenchboot/kas-generic-tb.yml
-```
+Below is list of main recipes/components of this layer, path to main recipe file
+and short description of component
 
-Replace `<recipes>` with name of changed recipes e.g. `skl`, `grub`,
-`linux-tb` and then rebuild.
+* tb-minimal-image
+    - Recipe: recipes-extended/images/tb-minimal-image.bb
+    - Content: Recipe to build image containing all TB components
+* intel-sinit-acm
+    - Recipe: recipes-support/intel-sinit-acm/intel-sinit-acm_630744.bb
+    - Content: Download and deploy Intel ACM `*.bin` files.
+* skl
+    - Recipe: recipes-support/skl/skl_git.bb
+    - Content: Secure Kernel Loader
+* linux-tb
+    - Recipe: recipes-kernel/linux/linux-tb_6.6.bb
+    - Content: Linux kernel
+* grub
+    - Recipe: recipes-bsp/grub/grub_%.bbappend
+* grub-efi
+    - Recipe: recipes-bsp/grub/grub-efi_%.bbappend
+* grub & grub-efi
+    - Recipe: recipes-bsp/grub/grub-tb-common.inc
+    - Content: Common config for both recipes
 
 ### Source revision
 
 To change branch or commit used by a recipe you have to change `BRANCH` or
 `SRCREV` variable in appropriate recipe file. In case of Linux kernel those
 variables are named `KBRANCH` and `SRCREV_machine`
-
-Below is list of recipe files for main TB components
-
-```text
-intel-sinit-acm - recipes-support/intel-sinit-acm/intel-sinit-acm_630744.bb
-skl - recipes-support/skl/skl_git.bb
-linux-tb - recipes-kernel/linux/linux-tb_6.6.bb
-grub & grub-efi (common parts) - recipes-bsp/grub/grub-tb-common.inc
-grub - recipes-bsp/grub/grub_%.bbappend
-grub-efi - recipes-bsp/grub/grub-efi_%.bbappend
-```
 
 ### Building modified source
 
@@ -222,8 +220,8 @@ shell
 kas-container shell meta-trenchboot/kas-generic-tb.yml
 ```
 
-After that use `devtool modify <recipe>` to fetch source code of recipe you want
-to work on. Bitbake will checkout branch and commit set by `BRANCH` and `SRCREV`
+After that use `devtool modify <recipe>` to fetch source code of the recipe you
+want to work on. Bitbake will checkout branch and commit set by `BRANCH` and `SRCREV`
 variables.
 
 ```shell
@@ -235,45 +233,32 @@ INFO: Recipe skl now set up to build from /build/workspace/sources/skl
 ```
 
 All recipes' sources you wish to modify will be in `/build/workspace/sources`.
-After modifications you can try to build recipe by using
-`devtool build <recipe>` or if you want to build whole image with your changes
+After modifications, you can try to a build recipe by using
+`devtool build <recipe>` or if you want to build the whole image with your changes
 then use `devtool build-image tb-minimal-image`.
-After building image you can [flash](#flash) and [boot](#booting) it or run it
-in [QEMU](#running-in-qemu).
-
-### Saving changes
-
-Commit changes you want saved and then use `devtool update-recipe <recipe>`.
-Devtool should generate `.patch` file and save it in correct place and also
-update recipe file.
-
-```shell
-builder@2906c1d05d2c:/build/workspace/sources/skl$ devtool update-recipe skl
-(...)
-INFO: Adding new patch 0001-wip.patch
-INFO: Updating recipe skl_git.bb
-```
+After building the image, you can [install](#flash) and [boot](#booting) it or
+run it in [QEMU](#running-in-qemu).
 
 #### GRUB
 
-In case of GRUB you should use `devtool update-recipe -a /repo -w <recipe>`
-where `<recipe>` is either `grub` or `grub-efi`. This is due to original
-recipe(`.bb` file) being defined in dfferent layer.
+Currently, if you try to build `grub` or `grub-efi` twice you will get error
 
-```shell
-builder@2906c1d05d2c:/build/workspace/sources$ devtool update-recipe -a /repo -w grub-efi
-(...)
-Summary: There was 1 WARNING message.
-NOTE: Writing append file /repo/recipes-bsp/grub/grub-efi_%.bbappend
-NOTE: Copying 0001-wip.patch to /repo/recipes-bsp/grub/grub-efi/0001-wip.patch
+```text
+| Updating file build-aux/config.rpath (backup in build-aux/config.rpath~)
+| Updating file m4/extern-inline.m4 (backup in m4/extern-inline.m4~)
+| gnulib/gnulib-tool: *** file /build/workspace/sources/grub/gnulib/m4/lib-ld.m4 not found
+| gnulib/gnulib-tool: *** Stop.
+| /build/workspace/sources/grub/bootstrap: gnulib-tool failed
+| WARNING: exit code 1 from a shell command.
 ```
+
+To fix this you have to delete `/build/workspace/sources/<recipe>/gnulib`
+directory before building recipe again.
 
 ### Local files
 
 Files added by Yocto recipe are stored inside `sources/<recipe>/oe-local-files`
-folder. When you use `devtool update-recipe` those files are automatically
-updated without committing them. Example of local file is `grub.cfg` in
-`grub-efi` recipe
+folder. Example of local file is `defconfig` file in `linux-tb` recipe
 
 ### Finishing
 
