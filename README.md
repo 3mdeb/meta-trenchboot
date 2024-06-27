@@ -213,93 +213,61 @@ variables are named `KBRANCH` and `SRCREV_machine`
 
 ### Building modified source
 
-In order to make and test changes to source code you first need to enter kas
-shell
+To make development easier you can use `scripts/tb.sh` script.
+
+In order to make and test changes to recipe's source code you first need to
+fetch it.
 
 ```shell
-kas-container shell meta-trenchboot/kas-generic-tb.yml
-```
-
-After that use `devtool modify <recipe>` to fetch source code of the recipe you
-want to work on. Bitbake will checkout branch and commit set by `BRANCH` and `SRCREV`
-variables.
-
-```shell
-devtool modify skl
+./scripts/tb.sh modify <recipe>
 (...)
-INFO: Source tree extracted to /build/workspace/sources/skl
+INFO: Source tree extracted to /build/workspace/sources/<recipe>
 INFO: Using source tree as build directory since that would be the default for this recipe
-INFO: Recipe skl now set up to build from /build/workspace/sources/skl
+INFO: Recipe skl now set up to build from /build/workspace/sources/<recipe>
 ```
 
-All recipes' sources you wish to modify will be in `/build/workspace/sources`.
+All recipes' sources you wish to modify will be in `../build/workspace/sources`.
 After modifications, you can try to a build recipe by using
-`devtool build <recipe>` or if you want to build the whole image with your changes
-then use `devtool build-image tb-minimal-image`.
+`./scripts/tb.sh build <recipe>` or `./scripts/tb.sh build tb-minimal-image` to
+build whole image containing modified recipes.
 After building the image, you can [install](#flash) and [boot](#booting) it or
-run it in [QEMU](#running-in-qemu).
-
-#### GRUB
-
-Currently, if you try to build `grub` or `grub-efi` twice you will get error
-
-```text
-| Updating file build-aux/config.rpath (backup in build-aux/config.rpath~)
-| Updating file m4/extern-inline.m4 (backup in m4/extern-inline.m4~)
-| gnulib/gnulib-tool: *** file /build/workspace/sources/grub/gnulib/m4/lib-ld.m4 not found
-| gnulib/gnulib-tool: *** Stop.
-| /build/workspace/sources/grub/bootstrap: gnulib-tool failed
-| WARNING: exit code 1 from a shell command.
-```
-
-To fix this you have to delete `/build/workspace/sources/<recipe>/gnulib`
-directory before building recipe again.
+run it in [QEMU](#running-in-qemu) or [deploy](#deployment) modified components
+directly to target platform.
 
 ### Local files
 
 Files added by Yocto recipe are stored inside `sources/<recipe>/oe-local-files`
 folder. Example of local file is `defconfig` file in `linux-tb` recipe
 
+### Linux kernel
+
+To modify Linux config either use `./scripts/tb.sh menuconfig` or modify
+`sources/linux-tb/oe-local-files/defconfig`
+
 ### Deployment
 
-To deploy component to target machine after making changes you can use rsync
-with path depending on component you modified. `<destination>` can be either
-`<USER>@<IP>:/` or path to mounted rootfs partition. Similarly,
-`<boot_destination>` is `<USER>@<IP>:/boot` or path to mounted boot partition.
-To deploy files via ssh you need to start/enable ssh server on target machine.
+To deploy component to target machine after making changes you can use:
 
-* grub
+```shell
+./scripts/tb.sh deploy <recipe> <destination>
+```
 
-    ```shell
-    rsync -chavP --stats /build/tmp/work/core2-64-tb-linux/grub/2.06/image/ <destination>
-    ```
+`<destination>` uses the same format as rsync. It should be path to root
+directory of TrenchBoot either local or remote. Format is the same as in rsync.
 
-* grub-efi
+Examples:
 
-    ```shell
-    rsync -chavP --stats /build/tmp/work/core2-64-tb-linux/grub-efi/2.06/image/ <destination>
-    ```
-
-* skl
-
-    ```shell
-    rsync -chavP --stats /build/tmp/work/core2-64-tb-linux/skl/git/image/ <destination>
-    rsync -chavP --stats /build/tmp/work/core2-64-tb-linux/skl/git/deploy-skl/skl.bin <boot_destination>
-    ```
-
-* linux-tb
-
-    ```shell
-    path_to_kernel="/build/tmp/work/genericx86_64-tb-linux/linux-tb/6.6.1"
-    rsync -chavP --stats --exclude "boot" "$path_to_kernel/image/" <destination>
-    scp "$path_to_kernel/deploy-linux-tb/bzImage-initramfs-genericx86-64.bin" <boot_destination>
-    scp "$path_to_kernel/deploy-linux-tb/bzImage-initramfs-genericx86-64.bin" <boot_destination>/bzImage
-    ```
+* `./scripts/tb.sh deploy skl /mnt` - TrenchBoot rootfs is mounted at `/mnt` and
+boot partition is mounted at `/mnt/boot`
+* `./scripts/tb.sh deploy skl root@192.168.4.10:/` - Remote machine running
+TrenchBoot.
+* `./scripts/tb.sh deploy skl root@192.168.4.10:/mnt` - Remote machine with
+TrenchBoot rootfs mounted at `/mnt` and boot partition mounted at `/mnt/boot`
 
 ### Finishing
 
-To finish working on source use `devtool reset <recipe>`. After that recipe
-will be built normally.
+To finish working on source use `./scripts/tb.sh reset <recipe>`. After that
+recipe source will be removed.
 
 ## Funding
 
