@@ -19,6 +19,7 @@ RDEPENDS:${PN}-utils += " \
                          packagegroup-security-tpm2 \
                          util-linux-bash-completion \
                          vim \
+                         rsync \
                          "
 
 RDEPENDS:${PN}-tests = " \
