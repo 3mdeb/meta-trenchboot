@@ -179,7 +179,7 @@ deploy_recipe() {
     case $RECIPE_ARG in
         skl)
             rsync -chavP "$core_path/skl/git/image/" "$DESTINATION_ARG"
-            rsync rsync -chrtvP --inplace "$core_path/skl/git/deploy-skl/skl.bin" "$DESTINATION_ARG/boot"
+            rsync -chrtvP --inplace "$core_path/skl/git/deploy-skl/skl.bin" "$DESTINATION_ARG/boot"
             ;;
         grub)
             error_msg "Not implemented yet"
@@ -191,9 +191,9 @@ deploy_recipe() {
         linux-tb)
             rsync -chavP --exclude "boot" \
                 "$kernel_path/image/" "$DESTINATION_ARG"
-            rsync rsync -chrtvP --inplace \
+            rsync -chrtvP --inplace \
                 "$kernel_path/deploy-linux-tb/bzImage-initramfs-genericx86-64.bin" "$DESTINATION_ARG/boot"
-            rsync rsync -chrtvP --inplace \
+            rsync -chrtvP --inplace \
                 "$kernel_path/deploy-linux-tb/bzImage-initramfs-genericx86-64.bin" "$DESTINATION_ARG/boot/bzImage"
             ;;
         tb-minimal-image)
