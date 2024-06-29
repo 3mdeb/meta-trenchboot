@@ -104,6 +104,14 @@ parse_args() {
             fi
             RECIPE_ARG="$2"
             DESTINATION_ARG="$3"
+            if [ "$DESTINATION_ARG" == "/" ]; then
+                read -p "Destination path is '/', are you sure? [N|y]: " -n 1 -r choice
+                echo
+                case $choice in
+                    y) ;;
+                    *) exit 0
+                esac
+            fi
             ;;
         menuconfig)
             RECIPE_ARG="linux-tb"
@@ -173,27 +181,48 @@ deploy_recipe() {
     local core_path="$work_dir/core2-64-tb-linux"
     local genericx86_path="$work_dir/genericx86_64-tb-linux"
     local kernel_path="$genericx86_path/linux-tb/6.6.1"
+    local partition_path=
     local device_path=
     local tmp_dir=
+    local grub_install_cmd=
 
     case $RECIPE_ARG in
         skl)
-            rsync -chavP "$core_path/skl/git/image/" "$DESTINATION_ARG"
-            rsync -chrtvP --inplace "$core_path/skl/git/deploy-skl/skl.bin" "$DESTINATION_ARG/boot"
+            sudo rsync -chavP "$core_path/skl/git/image/" "$DESTINATION_ARG"
+            sudo rsync -chrtvP --inplace "$core_path/skl/git/deploy-skl/skl.bin" "$DESTINATION_ARG/boot"
             ;;
         grub)
-            error_msg "Not implemented yet"
+            if [ ! -d "$DESTINATION_ARG" ]; then
+                error_msg "Can't find destination directory. 'grub' recipe can only be deployed locally"
+            fi
+            partition_path=$(df --output="source" "$DESTINATION_ARG/boot" | tail -1)
+            device_path=/dev/"$(lsblk -ndo pkname "$partition_path")"
+            read -p "Is destination device correct ($device_path) [N|y]: " -n 1 -r choice
+            echo
+            case $choice in
+                y) ;;
+                *)
+                    exit 0
+                    ;;
+            esac
+            grub_install_cmd="/build/tmp/sysroots-components/x86_64/grub-native/usr/sbin/grub-install \
+                            --boot-directory /mnt/boot -d /$core_path/grub/2.06/image/usr/lib/grub/i386-pc $device_path"
+            sudo rsync -chavP --exclude "boot" "$core_path/grub/2.06/image/" "$DESTINATION_ARG"
+            kas-container --runtime-args \
+                "--device=$device_path:$device_path --device=$partition_path:$partition_path -v $DESTINATION_ARG:/mnt" \
+                shell meta-trenchboot/kas-generic-tb.yml -c "sudo $grub_install_cmd"
+            #sudo rm -rf "$DESTINATION_ARG/boot/grub/"{fonts,grubenv,i386-pc}
             ;;
         grub-efi)
-            rsync -chavP --exclude "boot" "$core_path/grub-efi/2.06/image/" "$DESTINATION_ARG"
-            rsync -chrtvP --inplace "$core_path/grub-efi/2.06/image/boot/" "$DESTINATION_ARG"/boot
+            sudo rsync -chavP --exclude "boot" "$core_path/grub-efi/2.06/image/" "$DESTINATION_ARG"
+            sudo rsync -chrtvP --inplace "$core_path/grub-efi/2.06/image/boot/" "$DESTINATION_ARG"/boot
             ;;
         linux-tb)
-            rsync -chavP --exclude "boot" \
+            sudo rsync -chavP --exclude "boot" \
                 "$kernel_path/image/" "$DESTINATION_ARG"
-            rsync -chrtvP --inplace \
+            sudo rsync -chrtvP --inplace \
                 "$kernel_path/deploy-linux-tb/bzImage-initramfs-genericx86-64.bin" "$DESTINATION_ARG/boot"
-            rsync -chrtvP --inplace \
+            sudo rsync -chrtvP --inplace \
                 "$kernel_path/deploy-linux-tb/bzImage-initramfs-genericx86-64.bin" "$DESTINATION_ARG/boot/bzImage"
             ;;
         tb-minimal-image)
@@ -221,8 +250,9 @@ trap cleanup EXIT
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 LAYER_DIR="$(dirname "$SCRIPT_DIR")"
+WORK_DIR="$(dirname "$LAYER_DIR")"
 KAS_YAML="$LAYER_DIR/kas-generic-tb.yml"
-pushd "$(dirname "$LAYER_DIR")" &>/dev/null || exit 1
+pushd "$WORK_DIR" &>/dev/null || exit 1
 parse_args "$@"
 
 case "$ACTION" in
