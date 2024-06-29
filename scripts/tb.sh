@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -Eeu
 
 print_help() {
     cat << EOF
@@ -181,10 +181,14 @@ deploy_recipe() {
     local core_path="$work_dir/core2-64-tb-linux"
     local genericx86_path="$work_dir/genericx86_64-tb-linux"
     local kernel_path="$genericx86_path/linux-tb/6.6.1"
+    local partition_path_cmd=
+    local device_path_cmd=
     local partition_path=
     local device_path=
     local tmp_dir=
     local grub_install_cmd=
+    local remote=
+    local remote_path=
 
     case $RECIPE_ARG in
         skl)
@@ -192,25 +196,37 @@ deploy_recipe() {
             sudo rsync -chrtvP --inplace "$core_path/skl/git/deploy-skl/skl.bin" "$DESTINATION_ARG/boot"
             ;;
         grub)
-            if [ ! -d "$DESTINATION_ARG" ]; then
-                error_msg "Can't find destination directory. 'grub' recipe can only be deployed locally"
-            fi
-            partition_path=$(df --output="source" "$DESTINATION_ARG/boot" | tail -1)
-            device_path=/dev/"$(lsblk -ndo pkname "$partition_path")"
-            read -p "Is destination device correct ($device_path) [N|y]: " -n 1 -r choice
-            echo
-            case $choice in
-                y) ;;
+            remote="${DESTINATION_ARG%:*}"
+            remote_path="${DESTINATION_ARG#*:}"
+            # shellcheck disable=SC2016
+            partition_path_cmd="df \"$remote_path/boot\" | tail -1 |  awk '{print "'$1}'\'
+            # shellcheck disable=SC2016
+            device_path_cmd='echo -n /dev/"$(lsblk -ndo pkname "$('$partition_path_cmd')")"'
+            case $DESTINATION_ARG in
+                *:*)
+                    rsync -chavP --exclude "boot" "$core_path/grub/2.06/image/" "$DESTINATION_ARG"
+                    ssh "$remote" "grub-install --boot-directory $remote_path/boot \
+                        -d $remote_path/usr/lib/grub/i386-pc "'$(eval '"$device_path_cmd"')'
+                    ;;
                 *)
-                    exit 0
+                    partition_path="$(eval "$partition_path_cmd")"
+                    device_path="$(eval "$device_path_cmd")"
+                    read -p "Is destination device correct ($device_path) [N|y]: " -n 1 -r choice
+                    echo
+                    case $choice in
+                        y) ;;
+                        *)
+                            exit 0
+                            ;;
+                    esac
+                    grub_install_cmd="/build/tmp/sysroots-components/x86_64/grub-native/usr/sbin/grub-install \
+                                    --boot-directory /mnt/boot -d /mnt/usr/lib/grub/i386-pc $device_path"
+                    sudo rsync -chavP --exclude "boot" "$core_path/grub/2.06/image/" "$DESTINATION_ARG"
+                    kas-container --runtime-args \
+                        "--device=$device_path:$device_path --device=$partition_path:$partition_path -v $DESTINATION_ARG:/mnt" \
+                        shell meta-trenchboot/kas-generic-tb.yml -c "sudo $grub_install_cmd"
                     ;;
             esac
-            grub_install_cmd="/build/tmp/sysroots-components/x86_64/grub-native/usr/sbin/grub-install \
-                            --boot-directory /mnt/boot -d /$core_path/grub/2.06/image/usr/lib/grub/i386-pc $device_path"
-            sudo rsync -chavP --exclude "boot" "$core_path/grub/2.06/image/" "$DESTINATION_ARG"
-            kas-container --runtime-args \
-                "--device=$device_path:$device_path --device=$partition_path:$partition_path -v $DESTINATION_ARG:/mnt" \
-                shell meta-trenchboot/kas-generic-tb.yml -c "sudo $grub_install_cmd"
             #sudo rm -rf "$DESTINATION_ARG/boot/grub/"{fonts,grubenv,i386-pc}
             ;;
         grub-efi)
