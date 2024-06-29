@@ -12,10 +12,6 @@ This is WIP repo and it is under development. Use it at your own risk.
 If you have use-cases for such thing to be developed, please submit
 an issue or PR with description of your needs / fixes.
 
-After upgrade to Yocto honister build configurations from `meta-trenchboot` was
-not tested and may need additional work (e.g adopting patches to new version of
-sources).
-
 ---
 
 ## Prerequisites
@@ -70,7 +66,7 @@ something similar to (the exact tasks numbers may differ):
 
 Thanks to publishing the build cache on cache.dasharo.com the time needed to
 finish the process should be significantly decreased.
-Using the cache is enabled in kas/cache.yml file and can be disabled by removing
+Using the cache is enabled in `kas/cache.yml` file and can be disabled by removing
 reference to this file in `kas/common.yml`:
 
 ```yaml
@@ -187,3 +183,94 @@ After that you can start QEMU
 ```shell
 qemu-system-x86_64 -serial stdio -drive file=trenchboot.img,if=virtio -enable-kvm
 ```
+
+## Development
+
+### Main components
+
+Below is list of main recipes/components of this layer, path to main recipe file
+and short description of component
+
+* tb-minimal-image
+    - Recipe: recipes-extended/images/tb-minimal-image.bb
+    - Content: Recipe to build image containing all TB components
+* intel-sinit-acm
+    - Recipe: recipes-support/intel-sinit-acm/intel-sinit-acm_630744.bb
+    - Content: Download and deploy Intel ACM `*.bin` files.
+* skl
+    - Recipe: recipes-support/skl/skl_git.bb
+    - Content: Secure Kernel Loader
+* linux-tb
+    - Recipe: recipes-kernel/linux/linux-tb_6.6.bb
+    - Content: Linux kernel
+* grub
+    - Recipe: recipes-bsp/grub/grub_%.bbappend
+* grub-efi
+    - Recipe: recipes-bsp/grub/grub-efi_%.bbappend
+* grub & grub-efi
+    - Recipe: recipes-bsp/grub/grub-tb-common.inc
+    - Content: Common config for both recipes
+
+### Source revision
+
+To change branch or commit used by a recipe you have to change `BRANCH` or
+`SRCREV` variable in appropriate recipe file. In case of Linux kernel those
+variables are named `KBRANCH` and `SRCREV_machine`
+
+### Building modified source
+
+To make development easier you can use `scripts/tb.sh` script.
+
+In order to make and test changes to recipe's source code you first need to
+fetch it.
+
+```shell
+./scripts/tb.sh modify <recipe>
+(...)
+INFO: Source tree extracted to /build/workspace/sources/<recipe>
+INFO: Using source tree as build directory since that would be the default for this recipe
+INFO: Recipe skl now set up to build from /build/workspace/sources/<recipe>
+```
+
+All recipes' sources you wish to modify will be in `../build/workspace/sources`.
+After modifications, you can try to a build recipe by using
+`./scripts/tb.sh build <recipe>` or `./scripts/tb.sh build tb-minimal-image` to
+build whole image containing modified recipes.
+After building the image, you can [install](#flash) and [boot](#booting) it or
+run it in [QEMU](#running-in-qemu) or [deploy](#deployment) modified components
+directly to target platform.
+
+### Local files
+
+Files added by Yocto recipe are stored inside `sources/<recipe>/oe-local-files`
+folder. Example of local file is `defconfig` file in `linux-tb` recipe
+
+### Linux kernel
+
+To modify Linux config either use `./scripts/tb.sh menuconfig` or modify
+`sources/linux-tb/oe-local-files/defconfig`
+
+### Deployment
+
+To deploy component to target machine after making changes you can use:
+
+```shell
+./scripts/tb.sh deploy <recipe> <destination>
+```
+
+`<destination>` uses the same format as rsync. It should be path to root
+directory of TrenchBoot either local or remote. Format is the same as in rsync.
+
+Examples:
+
+* `./scripts/tb.sh deploy skl /mnt` - TrenchBoot rootfs is mounted at `/mnt` and
+boot partition is mounted at `/mnt/boot`
+* `./scripts/tb.sh deploy skl root@192.168.4.10:/` - Remote machine running
+TrenchBoot.
+* `./scripts/tb.sh deploy skl root@192.168.4.10:/mnt` - Remote machine with
+TrenchBoot rootfs mounted at `/mnt` and boot partition mounted at `/mnt/boot`
+
+### Finishing
+
+To finish working on source use `./scripts/tb.sh reset <recipe>`. After that
+recipe source will be removed.
