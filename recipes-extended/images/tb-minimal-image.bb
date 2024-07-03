@@ -10,6 +10,7 @@ IMAGE_FEATURES:append = " ssh-server-openssh"
 IMAGE_INSTALL:append = " \
                         packagegroup-tb-base \
                         packagegroup-tb-utils \
+                        packagegroup-tb-tests \
                         "
 
 IMAGE_FSTYPES += "wic wic.gz wic.bmap"

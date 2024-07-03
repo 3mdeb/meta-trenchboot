@@ -6,6 +6,7 @@ inherit packagegroup
 PACKAGES = " \
             ${PN}-base \
             ${PN}-utils \
+            ${PN}-tests \
             "
 
 RDEPENDS:${PN}-base += " \
@@ -19,3 +20,7 @@ RDEPENDS:${PN}-utils += " \
                          util-linux-bash-completion \
                          vim \
                          "
+
+RDEPENDS:${PN}-tests = " \
+    trenchboot-tests \
+"
