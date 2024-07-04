@@ -58,3 +58,9 @@ repos:
         language: python
         language_version: python3
         files: .*\.(bb)|(bbappend)|(bbclass)$
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.36.0
+    hooks:
+      - id: markdownlint
+      - id: markdownlint-fix
