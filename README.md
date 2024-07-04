@@ -134,7 +134,7 @@ from it. In GRUB menu you can choose normal `boot` or `slaunch-boot`.
 
  +----------------------------------------------------------------------------+
  |*boot                                                                       |
- | slaunch-boot                                                                   |
+ | slaunch-boot                                                               |
  |                                                                            |
  |                                                                            |
  |                                                                            |
