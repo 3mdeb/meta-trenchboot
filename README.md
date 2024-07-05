@@ -253,7 +253,7 @@ To deploy component to target machine after making changes you can use:
 ```
 
 `<destination>` uses the same format as rsync. It should be path to root
-directory of TrenchBoot either local or remote. Format is the same as in rsync.
+directory of TrenchBoot either local or remote.
 
 Examples:
 
