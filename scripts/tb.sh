@@ -175,12 +175,28 @@ build_recipe() {
         -c "devtool build $RECIPE_ARG"
 }
 
+get_recipe_version() {
+    local file_with_versions="$1"
+    local recipe="$2"
+    grep "^$recipe " "$file_with_versions" | sed -r 's/.*:(.*)-.*/\1/'
+}
+
 deploy_recipe() {
+    local versions=
+    local skl_ver=
+    local linux_tb_ver=
+    local grub_ver=
+    versions=$(mktemp)
+    kas-container shell meta-trenchboot/kas-generic-tb.yml \
+        -c "bitbake -s" 2>/dev/null 1>"$versions"
+    skl_ver="$(get_recipe_version "$versions" "skl")"
+    linux_tb_ver="$(get_recipe_version "$versions" "linux-tb")"
+    grub_ver="$(get_recipe_version "$versions" "grub")"
     local work_dir="build/tmp/work"
     local deploy_dir="build/tmp/deploy/images/genericx86-64"
     local core_path="$work_dir/core2-64-tb-linux"
     local genericx86_path="$work_dir/genericx86_64-tb-linux"
-    local kernel_path="$genericx86_path/linux-tb/6.6.1"
+    local kernel_path="$genericx86_path/linux-tb/$linux_tb_ver"
     local partition_path_cmd=
     local device_path_cmd=
     local partition_path=
@@ -192,8 +208,8 @@ deploy_recipe() {
 
     case $RECIPE_ARG in
         skl)
-            sudo rsync -chavP "$core_path/skl/git/image/" "$DESTINATION_ARG"
-            sudo rsync -chrtvP --inplace "$core_path/skl/git/deploy-skl/skl.bin" "$DESTINATION_ARG/boot"
+            sudo rsync -chavP "$core_path/skl/$skl_ver/image/" "$DESTINATION_ARG"
+            sudo rsync -chrtvP --inplace "$core_path/skl/$skl_ver/deploy-skl/skl.bin" "$DESTINATION_ARG/boot"
             ;;
         grub)
             remote="${DESTINATION_ARG%:*}"
@@ -204,7 +220,7 @@ deploy_recipe() {
             device_path_cmd='echo -n /dev/"$(lsblk -ndo pkname "$('$partition_path_cmd')")"'
             case $DESTINATION_ARG in
                 *:*)
-                    rsync -chavP --exclude "boot" "$core_path/grub/2.06/image/" "$DESTINATION_ARG"
+                    rsync -chavP --exclude "boot" "$core_path/grub/$grub_ver/image/" "$DESTINATION_ARG"
                     ssh "$remote" "grub-install --boot-directory $remote_path/boot \
                         -d $remote_path/usr/lib/grub/i386-pc "'$(eval '"$device_path_cmd"')'
                     ;;
@@ -221,7 +237,7 @@ deploy_recipe() {
                     esac
                     grub_install_cmd="/build/tmp/sysroots-components/x86_64/grub-native/usr/sbin/grub-install \
                                     --boot-directory /mnt/boot -d /mnt/usr/lib/grub/i386-pc $device_path"
-                    sudo rsync -chavP --exclude "boot" "$core_path/grub/2.06/image/" "$DESTINATION_ARG"
+                    sudo rsync -chavP --exclude "boot" "$core_path/grub/$grub_ver/image/" "$DESTINATION_ARG"
                     kas-container --runtime-args \
                         "--device=$device_path:$device_path --device=$partition_path:$partition_path -v $DESTINATION_ARG:/mnt" \
                         shell meta-trenchboot/kas-generic-tb.yml -c "sudo $grub_install_cmd"
@@ -230,8 +246,8 @@ deploy_recipe() {
             #sudo rm -rf "$DESTINATION_ARG/boot/grub/"{fonts,grubenv,i386-pc}
             ;;
         grub-efi)
-            sudo rsync -chavP --exclude "boot" "$core_path/grub-efi/2.06/image/" "$DESTINATION_ARG"
-            sudo rsync -chrtvP --inplace "$core_path/grub-efi/2.06/image/boot/" "$DESTINATION_ARG"/boot
+            sudo rsync -chavP --exclude "boot" "$core_path/grub-efi/$grub_ver/image/" "$DESTINATION_ARG"
+            sudo rsync -chrtvP --inplace "$core_path/grub-efi/$grub_ver/image/boot/" "$DESTINATION_ARG"/boot
             ;;
         linux-tb)
             sudo rsync -chavP --exclude "boot" \
