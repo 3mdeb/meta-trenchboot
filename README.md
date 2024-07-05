@@ -127,14 +127,14 @@ To flash resulting image:
 ## Booting
 
 To run TrenchBoot connect drive with flashed image to target platform and boot
-from it. In GRUB menu you can choose normal `boot` or `skl-boot`.
+from it. In GRUB menu you can choose normal `boot` or `slaunch-boot`.
 
 ```text
                              GNU GRUB  version 2.06
 
  +----------------------------------------------------------------------------+
  |*boot                                                                       |
- | skl-boot                                                                   |
+ | slaunch-boot                                                               |
  |                                                                            |
  |                                                                            |
  |                                                                            |
@@ -172,7 +172,7 @@ To login use `root` account without password.
 ## Running in QEMU
 
 It's possible to test image by running it in QEMU. Depending on QEMU
-configuration not all features may be available, SKL boot among others.
+configuration not all features may be available, slaunch boot among others.
 
 To create bootable image you can once again use `bmaptool` but this time instead
 of writing image to flash device you write it to file
