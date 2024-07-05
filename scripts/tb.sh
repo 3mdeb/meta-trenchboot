@@ -75,7 +75,7 @@ parse_args() {
                 set -x
                 ;;
             -*)
-                usage_error "Unknown option"
+                usage_error "Unknown option '$1'"
                 ;;
             *)
                 positional_args+=("$1")
