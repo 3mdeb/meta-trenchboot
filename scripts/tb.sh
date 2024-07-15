@@ -159,7 +159,7 @@ reset_recipe() {
 
 build_recipe() {
     if [ "$RECIPE_ARG" == "tb-minimal-image" ]; then
-        rm -rf "build/workspace/sources/grub/gnulib" 2&>/dev/null|| true
+        rm -rf "build/workspace/sources/grub/gnulib" 2&>/dev/null || true
         rm -rf "build/workspace/sources/grub-efi/gnulib" 2&>/dev/null || true
         kas-container shell "$KAS_YAML" \
             -c "devtool build-image $RECIPE_ARG"
@@ -181,6 +181,61 @@ get_recipe_version() {
     grep "^$recipe " "$file_with_versions" | sed -r 's/.*:(.*)-.*/\1/'
 }
 
+update_grub() {
+    local grub_dir=/usr/lib/grub
+    local remote=
+    local remote_path=
+
+    case $DESTINATION_ARG in
+        *:*)
+            remote="${DESTINATION_ARG%:*}"
+            remote_path="${DESTINATION_ARG#*:}"
+            grub_dir="$remote_path/$grub_dir"
+            # shellcheck disable=SC2016
+            disk_device_name='basename $(realpath /sys/class/block/$(basename \
+                $(df '$remote_path/boot' | awk "END{print \$1}"))/../)'
+            ssh "$remote" "grub-mkimage -p '(hd0,msdos1)/grub' -d $grub_dir/i386-pc \
+                -o $grub_dir/i386-pc/core.img -O i386-pc at_keyboard biosdisk boot \
+                chain configfile ext2 fat linux ls part_msdos reboot serial vga"
+            ssh "$remote" "echo \"(hd0) /dev/\$($disk_device_name)\" > /tmp/device.map"
+            ssh "$remote" "grub-bios-setup -v --device-map=/tmp/device.map \
+                -r \"hd0,msdos1\" -d $grub_dir/i386-pc /dev/\$($disk_device_name)"
+            ;;
+        *)
+            grub_dir="/mnt/$grub_dir"
+            boot_device_name="$(basename "$(df "$DESTINATION_ARG/boot" | awk 'END{print $1}')")"
+            disk_device="/dev/$(basename "$(realpath "/sys/class/block/$boot_device_name/../")")"
+            read -p "Is destination device correct ($disk_device) [N|y]: " -n 1 -r choice
+            echo
+            case $choice in
+                y) ;;
+                *)
+                    exit 0
+                    ;;
+            esac
+            device_map=$(basename "$(mktemp -p "$WORK_DIR")")
+            echo "(hd0) $disk_device" > "$device_map"
+            if [ -o xtrace ]; then
+                verbose="set -x"
+            else
+                verbose=":"
+            fi
+            kas-container --runtime-args \
+                "--device=$disk_device:$disk_device -v $DESTINATION_ARG:/mnt" \
+                shell meta-trenchboot/kas-generic-tb.yml -c " \
+                  $verbose &&
+                  cd /build/tmp/sysroots-components/x86_64/grub-native/usr &&
+                  sudo ./bin/grub-mkimage -p '(hd0,msdos1)/grub' -d $grub_dir/i386-pc \
+                    -o $grub_dir/i386-pc/core.img -O i386-pc at_keyboard biosdisk boot \
+                    chain configfile ext2 fat linux ls part_msdos reboot serial vga &&
+                  sudo ./sbin/grub-bios-setup -v --device-map=/work/$device_map \
+                    -r 'hd0,msdos1' -d $grub_dir/i386-pc $disk_device \
+                "
+            rm "$WORK_DIR/$device_map"
+            ;;
+    esac
+}
+
 deploy_recipe() {
     local versions=
     local skl_ver=
@@ -197,14 +252,8 @@ deploy_recipe() {
     local core_path="$work_dir/core2-64-tb-linux"
     local genericx86_path="$work_dir/genericx86_64-tb-linux"
     local kernel_path="$genericx86_path/linux-tb/$linux_tb_ver"
-    local partition_path_cmd=
-    local device_path_cmd=
-    local partition_path=
     local device_path=
     local tmp_dir=
-    local grub_install_cmd=
-    local remote=
-    local remote_path=
 
     case $RECIPE_ARG in
         skl)
@@ -212,38 +261,8 @@ deploy_recipe() {
             sudo rsync -chrtvP --inplace "$core_path/skl/$skl_ver/deploy-skl/skl.bin" "$DESTINATION_ARG/boot"
             ;;
         grub)
-            remote="${DESTINATION_ARG%:*}"
-            remote_path="${DESTINATION_ARG#*:}"
-            # shellcheck disable=SC2016
-            partition_path_cmd="df \"$remote_path/boot\" | tail -1 |  awk '{print "'$1}'\'
-            # shellcheck disable=SC2016
-            device_path_cmd='echo -n /dev/"$(lsblk -ndo pkname "$('$partition_path_cmd')")"'
-            case $DESTINATION_ARG in
-                *:*)
-                    rsync -chavP --exclude "boot" "$core_path/grub/$grub_ver/image/" "$DESTINATION_ARG"
-                    ssh "$remote" "grub-install --boot-directory $remote_path/boot \
-                        -d $remote_path/usr/lib/grub/i386-pc "'$(eval '"$device_path_cmd"')'
-                    ;;
-                *)
-                    partition_path="$(eval "$partition_path_cmd")"
-                    device_path="$(eval "$device_path_cmd")"
-                    read -p "Is destination device correct ($device_path) [N|y]: " -n 1 -r choice
-                    echo
-                    case $choice in
-                        y) ;;
-                        *)
-                            exit 0
-                            ;;
-                    esac
-                    grub_install_cmd="/build/tmp/sysroots-components/x86_64/grub-native/usr/sbin/grub-install \
-                                    --boot-directory /mnt/boot -d /mnt/usr/lib/grub/i386-pc $device_path"
-                    sudo rsync -chavP --exclude "boot" "$core_path/grub/$grub_ver/image/" "$DESTINATION_ARG"
-                    kas-container --runtime-args \
-                        "--device=$device_path:$device_path --device=$partition_path:$partition_path -v $DESTINATION_ARG:/mnt" \
-                        shell meta-trenchboot/kas-generic-tb.yml -c "sudo $grub_install_cmd"
-                    ;;
-            esac
-            #sudo rm -rf "$DESTINATION_ARG/boot/grub/"{fonts,grubenv,i386-pc}
+            sudo rsync -chavP --exclude "boot" "$core_path/grub/$grub_ver/image/" "$DESTINATION_ARG"
+            update_grub
             ;;
         grub-efi)
             sudo rsync -chavP --exclude "boot" "$core_path/grub-efi/$grub_ver/image/" "$DESTINATION_ARG"
@@ -267,13 +286,15 @@ deploy_recipe() {
                 sudo losetup -d $device_path ; set -e ; cleanup" EXIT
             sudo mount -r -o uid=$UID "${device_path}p1" "$tmp_dir/boot"
             sudo mount -r "${device_path}p2" "$tmp_dir/rootfs"
-            sudo rsync -chavP --exclude "boot" "$tmp_dir/rootfs/" "$DESTINATION_ARG"
+            sudo rsync -chavP --exclude "boot" --exclude "etc/fstab" \
+                "$tmp_dir/rootfs/" "$DESTINATION_ARG"
             sudo rsync -chrtvP --inplace "$tmp_dir/boot/" "$DESTINATION_ARG/boot"
             sudo umount "$tmp_dir"/*
             sudo losetup -d "$device_path"
             trap cleanup EXIT
             rmdir "$tmp_dir/boot" "$tmp_dir/rootfs"
             rmdir "$tmp_dir"
+            update_grub
             ;;
     esac
 }
