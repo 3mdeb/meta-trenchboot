@@ -255,25 +255,34 @@ deploy_recipe() {
     local device_path=
     local tmp_dir=
 
+    case $DESTINATION_ARG in
+        *:*)
+            SUDO=
+            ;;
+        *)
+            SUDO=sudo
+            ;;
+    esac
+
     case $RECIPE_ARG in
         skl)
-            sudo rsync -chavP "$core_path/skl/$skl_ver/image/" "$DESTINATION_ARG"
-            sudo rsync -chrtvP --inplace "$core_path/skl/$skl_ver/deploy-skl/skl.bin" "$DESTINATION_ARG/boot"
+            ${SUDO} rsync -chavP "$core_path/skl/$skl_ver/image/" "$DESTINATION_ARG"
+            ${SUDO} rsync -chrtvP --inplace "$core_path/skl/$skl_ver/deploy-skl/skl.bin" "$DESTINATION_ARG/boot"
             ;;
         grub)
-            sudo rsync -chavP --exclude "boot" "$core_path/grub/$grub_ver/image/" "$DESTINATION_ARG"
+            ${SUDO} rsync -chavP --exclude "boot" "$core_path/grub/$grub_ver/image/" "$DESTINATION_ARG"
             update_grub
             ;;
         grub-efi)
-            sudo rsync -chavP --exclude "boot" "$core_path/grub-efi/$grub_ver/image/" "$DESTINATION_ARG"
-            sudo rsync -chrtvP --inplace "$core_path/grub-efi/$grub_ver/image/boot/" "$DESTINATION_ARG"/boot
+            ${SUDO} rsync -chavP --exclude "boot" "$core_path/grub-efi/$grub_ver/image/" "$DESTINATION_ARG"
+            ${SUDO} rsync -chrtvP --inplace "$core_path/grub-efi/$grub_ver/image/boot/" "$DESTINATION_ARG"/boot
             ;;
         linux-tb)
-            sudo rsync -chavP --exclude "boot" \
+            ${SUDO} rsync -chavP --exclude "boot" \
                 "$kernel_path/image/" "$DESTINATION_ARG"
-            sudo rsync -chrtvP --inplace \
+            ${SUDO} rsync -chrtvP --inplace \
                 "$kernel_path/deploy-linux-tb/bzImage-initramfs-genericx86-64.bin" "$DESTINATION_ARG/boot"
-            sudo rsync -chrtvP --inplace \
+            ${SUDO} rsync -chrtvP --inplace \
                 "$kernel_path/deploy-linux-tb/bzImage-initramfs-genericx86-64.bin" "$DESTINATION_ARG/boot/bzImage"
             ;;
         tb-minimal-image)
