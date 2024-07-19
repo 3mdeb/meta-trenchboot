@@ -231,8 +231,9 @@ After modifications, you can try to a build recipe by using
 `./scripts/tb.sh build <recipe>` or `./scripts/tb.sh build tb-minimal-image` to
 build whole image containing modified recipes.
 After building the image, you can [install](#flash) and [boot](#booting) it or
-run it in [QEMU](#running-in-qemu) or [deploy](#deployment) modified components
-directly to target platform.
+run it in [QEMU](#running-in-qemu).
+In case of building individual recipe instead of whole image you have to
+[deploy](#deployment) those changes instead of flashing.
 
 ### Local files
 
