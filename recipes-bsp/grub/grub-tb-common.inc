@@ -1,7 +1,9 @@
-SRC_URI = "git://github.com/TrenchBoot/grub.git;name=grub;branch=${BRANCH_grub};protocol=https \
-           git://github.com/coreutils/gnulib;name=gnulib;branch=${BRANCH_gnulib};protocol=https;destsuffix=git/gnulib"
-
 PV = "2.06"
+
+SRC_URI = " \
+           git://github.com/TrenchBoot/grub.git;name=grub;branch=${BRANCH_grub};protocol=https \
+           git://github.com/coreutils/gnulib;name=gnulib;branch=${BRANCH_gnulib};protocol=https;destsuffix=git/gnulib \
+          "
 
 BRANCH_grub = "intel-txt-aem-2.06-rebased"
 SRCREV_grub = "85ccfdc700a1640c148909cbbad777ba6d7d124b"
