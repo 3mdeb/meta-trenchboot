@@ -175,12 +175,6 @@ build_recipe() {
         -c "devtool build $RECIPE_ARG"
 }
 
-get_recipe_version() {
-    local file_with_versions="$1"
-    local recipe="$2"
-    grep "^$recipe " "$file_with_versions" | sed -r 's/.*:(.*)-.*/\1/'
-}
-
 update_grub() {
     local grub_dir=/usr/lib/grub
     local remote=
@@ -237,23 +231,20 @@ update_grub() {
 }
 
 deploy_recipe() {
-    local versions=
-    local skl_ver=
-    local linux_tb_ver=
-    local grub_ver=
-    versions=$(mktemp)
-    kas-container shell meta-trenchboot/kas-generic-tb.yml \
-        -c "bitbake -s" 2>/dev/null 1>"$versions"
-    skl_ver="$(get_recipe_version "$versions" "skl")"
-    linux_tb_ver="$(get_recipe_version "$versions" "linux-tb")"
-    grub_ver="$(get_recipe_version "$versions" "grub")"
+    local kernel_path=
+    local device_path=
+    local tmp_dir=
+    local recipe_version=
     local work_dir="build/tmp/work"
     local deploy_dir="build/tmp/deploy/images/genericx86-64"
     local core_path="$work_dir/core2-64-tb-linux"
     local genericx86_path="$work_dir/genericx86_64-tb-linux"
-    local kernel_path="$genericx86_path/linux-tb/$linux_tb_ver"
-    local device_path=
-    local tmp_dir=
+
+    recipe_version=$(
+        kas-container shell meta-trenchboot/kas-generic-tb.yml \
+                -c "devtool latest-version $RECIPE_ARG" 2>&1 |
+            grep "INFO: Current version: " | sed 's/INFO: Current version: //'
+        )
 
     case $DESTINATION_ARG in
         *:*)
@@ -266,18 +257,19 @@ deploy_recipe() {
 
     case $RECIPE_ARG in
         skl)
-            ${SUDO} rsync -chavP "$core_path/skl/$skl_ver/image/" "$DESTINATION_ARG"
-            ${SUDO} rsync -chrtvP --inplace "$core_path/skl/$skl_ver/deploy-skl/skl.bin" "$DESTINATION_ARG/boot"
+            ${SUDO} rsync -chavP "$core_path/skl/$recipe_version/image/" "$DESTINATION_ARG"
+            ${SUDO} rsync -chrtvP --inplace "$core_path/skl/$recipe_version/deploy-skl/skl.bin" "$DESTINATION_ARG/boot"
             ;;
         grub)
-            ${SUDO} rsync -chavP --exclude "boot" "$core_path/grub/$grub_ver/image/" "$DESTINATION_ARG"
+            ${SUDO} rsync -chavP --exclude "boot" "$core_path/grub/$recipe_version/image/" "$DESTINATION_ARG"
             update_grub
             ;;
         grub-efi)
-            ${SUDO} rsync -chavP --exclude "boot" "$core_path/grub-efi/$grub_ver/image/" "$DESTINATION_ARG"
-            ${SUDO} rsync -chrtvP --inplace "$core_path/grub-efi/$grub_ver/image/boot/" "$DESTINATION_ARG"/boot
+            ${SUDO} rsync -chavP --exclude "boot" "$core_path/grub-efi/$recipe_version/image/" "$DESTINATION_ARG"
+            ${SUDO} rsync -chrtvP --inplace "$core_path/grub-efi/$recipe_version/image/boot/" "$DESTINATION_ARG"/boot
             ;;
         linux-tb)
+            kernel_path="$genericx86_path/linux-tb/$recipe_version"
             ${SUDO} rsync -chavP --exclude "boot" \
                 "$kernel_path/image/" "$DESTINATION_ARG"
             ${SUDO} rsync -chrtvP --inplace \
