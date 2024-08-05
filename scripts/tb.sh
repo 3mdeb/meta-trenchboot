@@ -243,7 +243,7 @@ deploy_recipe() {
     recipe_version=$(
         kas-container shell meta-trenchboot/kas-generic-tb.yml \
                 -c "devtool latest-version $RECIPE_ARG" 2>&1 |
-            grep "INFO: Current version: " | sed 's/INFO: Current version: //'
+            sed -n 's/INFO: Current version: //p'
         )
 
     case $DESTINATION_ARG in
