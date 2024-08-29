@@ -5,7 +5,7 @@ SRC_URI = " \
            git://github.com/coreutils/gnulib;name=gnulib;branch=${BRANCH_gnulib};protocol=https;destsuffix=git/gnulib \
           "
 
-BRANCH_grub = "intel-txt-aem-2.06-rebased"
+BRANCH_grub = "intel-txt-aem-2.06"
 SRCREV_grub = "85ccfdc700a1640c148909cbbad777ba6d7d124b"
 
 # We add gnulib to SRC_URI to avoid downloading it during the do_configure().
