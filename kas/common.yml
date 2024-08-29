@@ -9,7 +9,7 @@ repos:
 
   poky:
     url: https://github.com/zarhus/poky.git
-    refspec: 8bd68e6bf77a2b90ac7332e545d6f9761e814878
+    refspec: 0bb7dda99977a3366a0e2f55473dd516eec57346
     layers:
       meta:
       meta-poky:
