@@ -51,27 +51,28 @@ do_check_xen_state() {
 }
 
 addtask check_xen_state before do_rootfs
+addtask check_xen_state before do_rootfs
 
 # note: this may be unused, see the wic plugin
 syslinux_iso_populate:append() {
-	install -m 0444 ${STAGING_DATADIR}/syslinux/libcom32.c32 ${ISODIR}${ISOLINUXDIR}
-	install -m 0444 ${STAGING_DATADIR}/syslinux/mboot.c32 ${ISODIR}${ISOLINUXDIR}
+    install -m 0444 ${STAGING_DATADIR}/syslinux/libcom32.c32 ${ISODIR}${ISOLINUXDIR}
+    install -m 0444 ${STAGING_DATADIR}/syslinux/mboot.c32 ${ISODIR}${ISOLINUXDIR}
 }
 
 # note: this may be unused, see the wic plugin
 syslinux_hddimg_populate:append() {
-	install -m 0444 ${STAGING_DATADIR}/syslinux/libcom32.c32 ${HDDDIR}${SYSLINUXDIR}
-	install -m 0444 ${STAGING_DATADIR}/syslinux/mboot.c32 ${HDDDIR}${SYSLINUXDIR}
+    install -m 0444 ${STAGING_DATADIR}/syslinux/libcom32.c32 ${HDDDIR}${SYSLINUXDIR}
+    install -m 0444 ${STAGING_DATADIR}/syslinux/mboot.c32 ${HDDDIR}${SYSLINUXDIR}
 }
 
 # note: this may be unused, see the wic plugin
 grubefi_populate:append() {
-	install -m 0644 ${DEPLOY_DIR_IMAGE}/xen-${MACHINE}.gz ${DEST}${EFIDIR}/xen.gz
+    install -m 0644 ${DEPLOY_DIR_IMAGE}/xen-${MACHINE}.gz ${DEST}${EFIDIR}/xen.gz
 }
 
 # note: this may be unused, see the wic plugin
 syslinux_populate:append() {
-	install -m 0644 ${DEPLOY_DIR_IMAGE}/xen-${MACHINE}.gz ${DEST}/xen.gz
+    install -m 0644 ${DEPLOY_DIR_IMAGE}/xen-${MACHINE}.gz ${DEST}/xen.gz
 }
 
 SYSLINUX_XEN_ARGS ?= "loglvl=all guest_loglvl=all console=com1,vga com1=115200,8n1"
@@ -79,13 +80,13 @@ SYSLINUX_KERNEL_ARGS ?= "ramdisk_size=32768 root=/dev/ram0 rw console=hvc0 early
 
 # note: this may be unused, see the wic plugin
 build_syslinux_cfg () {
-	echo "ALLOWOPTIONS 1" > ${SYSLINUX_CFG}
-	echo "DEFAULT boot" >> ${SYSLINUX_CFG}
-	echo "TIMEOUT 10" >> ${SYSLINUX_CFG}
-	echo "PROMPT 1" >> ${SYSLINUX_CFG}
-	echo "LABEL boot" >> ${SYSLINUX_CFG}
-	echo "  KERNEL mboot.c32" >> ${SYSLINUX_CFG}
-	echo "  APPEND /xen.gz ${SYSLINUX_XEN_ARGS} --- /vmlinuz ${SYSLINUX_KERNEL_ARGS} --- /initrd" >> ${SYSLINUX_CFG}
+    echo "ALLOWOPTIONS 1" > ${SYSLINUX_CFG}
+    echo "DEFAULT boot" >> ${SYSLINUX_CFG}
+    echo "TIMEOUT 10" >> ${SYSLINUX_CFG}
+    echo "PROMPT 1" >> ${SYSLINUX_CFG}
+    echo "LABEL boot" >> ${SYSLINUX_CFG}
+    echo "  KERNEL mboot.c32" >> ${SYSLINUX_CFG}
+    echo "  APPEND /xen.gz ${SYSLINUX_XEN_ARGS} --- /vmlinuz ${SYSLINUX_KERNEL_ARGS} --- /initrd" >> ${SYSLINUX_CFG}
 }
 
 # Enable runqemu. eg: runqemu xen-image-minimal nographic slirp
