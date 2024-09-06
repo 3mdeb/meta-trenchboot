@@ -1,9 +1,14 @@
-require recipes-extended/images/tb-xen-minimal-image.bb
+# nooelint: oelint.file.requirenotfound
+require recipes-extended/images/xen-image-minimal.bb
 
-DISTRO_FEATURES += "\
-    xen \
-"
+SUMMARY = "A small XEN image just capable of allowing a device to boot."
+DESCRIPTION = "A small XEN image just capable of allowing a device to boot."
+LICENSE = "MIT"
 
-#IMAGE_INSTALL += " \
-#    xen-misc \
-#"
+IMAGE_FEATURES:append = " ssh-server-openssh"
+
+IMAGE_INSTALL:append = " \
+                        packagegroup-tb-base \
+                        packagegroup-tb-utils \
+                        packagegroup-tb-tests \
+                        "

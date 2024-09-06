@@ -6,7 +6,7 @@ header:
 
 repos:
   meta-virtualization:
-    url: <https://git.yoctoproject.org/git/meta-virtualization>
+    url: https://git.yoctoproject.org/git/meta-virtualization
     refspec: 54b806b1985f3989722ee308e1073530fe3328c1
 
 distro: tb-distro
