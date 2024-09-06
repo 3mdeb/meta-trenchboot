@@ -17,7 +17,7 @@ SRCREV_grub = "85ccfdc700a1640c148909cbbad777ba6d7d124b"
 # with the bootstrap.conf, otherwise it will be sync during do_configure()
 # again.
 BRANCH_gnulib = "master"
-SRCREV_gnulib = "9f48fb992a3d7e96610c4ce8be969cff2d61a01b"
+SRCREV_gnulib = "e87d09bee37eeb742b8a34c9054cd2ebde22b835"
 
 SRCREV_FORMAT = "grub_gnulib"
 
