@@ -1,4 +1,3 @@
-# nooelint: oelint.file.requirenotfound
 IMAGE_FEATURES:append = " ssh-server-openssh"
 
 IMAGE_INSTALL:append = " \
