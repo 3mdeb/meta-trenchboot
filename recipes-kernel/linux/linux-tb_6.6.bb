@@ -12,7 +12,7 @@ DEPENDS += "${@bb.utils.contains('ARCH', 'x86', 'elfutils-native', '', d)}"
 DEPENDS += "openssl-native util-linux-native"
 
 PV = "${LINUX_VERSION}"
-KBRANCH = "linux-sl-master-9-12-24-v11"
+KBRANCH = "linux-sl-6.6"
 KMETA = "kernel-meta"
 SRC_URI = "\
     git://github.com/TrenchBoot/linux.git;protocol=https;branch=${KBRANCH};name=machine; \
@@ -21,7 +21,7 @@ SRC_URI = "\
     file://debug.cfg \
     file://efi.cfg \
 "
-SRCREV_machine = "55bf8030593be2aac154b67866b92bcfa79831c7"
+SRCREV_machine = "6232d27cf74aa6ace46ee362d2172d18bdf70282"
 SRCREV_meta = "49698cadd79745fa26aa7ef507c16902250c1750"
 
 LINUX_VERSION ?= "6.6.1"
