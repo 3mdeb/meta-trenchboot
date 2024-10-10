@@ -1,0 +1,28 @@
+From 8b85c304799c0852d98e03c41c6014d03c1b1a2d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20Iwanicki?= <michal.iwanicki@3mdeb.com>
+Date: Mon, 9 Sep 2024 19:22:22 +0200
+Subject: [PATCH] wic: bootimg-pcbios.py: Add multiboot2 to modules
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Michał Iwanicki <michal.iwanicki@3mdeb.com>
+---
+ scripts/lib/wic/plugins/source/bootimg-pcbios.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/lib/wic/plugins/source/bootimg-pcbios.py b/scripts/lib/wic/plugins/source/bootimg-pcbios.py
+index 90d3fab93a23..13e703561609 100644
+--- a/scripts/lib/wic/plugins/source/bootimg-pcbios.py
++++ b/scripts/lib/wic/plugins/source/bootimg-pcbios.py
+@@ -36,7 +36,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
+         """
+         Create the core image in the grub directory.
+         """
+-        grub_modules = "at_keyboard biosdisk boot chain configfile ext2 fat linux ls part_msdos reboot serial vga"
++        grub_modules = "at_keyboard biosdisk boot chain configfile ext2 fat linux ls part_msdos reboot serial vga multiboot2"
+         cmd_mkimage = "grub-mkimage -p %s -d %s -o %s/core.img -O i386-pc %s" % (
+                        "(hd0,msdos1)/grub",
+                        grubdir,
+-- 
+2.44.0
