@@ -25,6 +25,8 @@ IMAGE_INSTALL:append = " \
                         kernel-vmlinux \
                         "
 
+do_image_wic[depends] += "xen:do_deploy"
+
 do_check_xen_state() {
     if [ "${@bb.utils.contains('DISTRO_FEATURES', 'xen', ' yes', 'no', d)}" = "no" ]; then
         die "DISTRO_FEATURES does not contain 'xen'"
