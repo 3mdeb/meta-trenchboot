@@ -20,6 +20,7 @@ RDEPENDS:${PN}-utils += " \
                          util-linux-bash-completion \
                          vim \
                          rsync \
+                         kexec \
                          "
 
 RDEPENDS:${PN}-tests = " \
