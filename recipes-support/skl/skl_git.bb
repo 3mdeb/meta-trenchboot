@@ -7,9 +7,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4641e94ec96f98fabc56ff9cc48be14b"
 
 DEPENDS = "util-linux-native"
 
-SRC_URI = "git://github.com/TrenchBoot/secure-kernel-loader.git;protocol=https;nobranch=1;name=skl"
-# v0.4.0 tag
-SRCREV = "18f535843b22e784dbbc8e1ec11d8dc099b3d0fe"
+SRC_URI = "git://github.com/TrenchBoot/secure-kernel-loader.git;protocol=https;branch=${BRANCH};name=skl"
+BRANCH = "master"
+SRCREV = "1cc0a75191ed0309a6cc660533a8e044f40019d3"
 
 TUNE_CCARGS:remove = "-msse3 -mfpmath=sse"
 
