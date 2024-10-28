@@ -272,9 +272,9 @@ deploy_recipe() {
             kernel_path="$genericx86_path/linux-tb/$recipe_version"
             ${SUDO} rsync -chavP --exclude "boot" \
                 "$kernel_path/image/" "$DESTINATION_ARG"
-            ${SUDO} rsync -chrtvP --inplace \
+            ${SUDO} rsync -chrtvPL --inplace \
                 "$kernel_path/deploy-linux-tb/bzImage-initramfs-genericx86-64.bin" "$DESTINATION_ARG/boot"
-            ${SUDO} rsync -chrtvP --inplace \
+            ${SUDO} rsync -chrtvPL --inplace \
                 "$kernel_path/deploy-linux-tb/bzImage-initramfs-genericx86-64.bin" "$DESTINATION_ARG/boot/bzImage"
             ;;
         tb-full-image)
