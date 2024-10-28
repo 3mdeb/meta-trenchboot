@@ -1,12 +1,12 @@
-PV = "2.06"
+PV = "2.12"
 
 SRC_URI = " \
            git://github.com/TrenchBoot/grub.git;name=grub;branch=${BRANCH_grub};protocol=https \
            git://github.com/coreutils/gnulib;name=gnulib;branch=${BRANCH_gnulib};protocol=https;destsuffix=git/gnulib \
           "
 
-BRANCH_grub = "intel-txt-aem-2.06"
-SRCREV_grub = "85ccfdc700a1640c148909cbbad777ba6d7d124b"
+BRANCH_grub = "tb-2.12-57-v1"
+SRCREV_grub = "8f2771861b20a34faa02d797c44b1edc4d1592c1"
 
 # We add gnulib to SRC_URI to avoid downloading it during the do_configure().
 # The bootstrap script seems to be smart enough to skip fetching repo again
@@ -27,4 +27,15 @@ do_configure:prepend() {
     cd ${S}
     ${S}/bootstrap
     ${S}/autogen.sh
+}
+
+do_configure:append() {
+    # Work around a workaround in poky!
+    #
+    # Tarballs of 2.12 are missing this file, so poky creates it not taking into
+    # account that this breaks out-of-tree builds: Make finds the file as
+    # "extra_deps.lst" in the source tree for its dependency checking through
+    # VPATH, but shell commands run in the build tree don't check the source
+    # tree and just fail.
+    rm ${S}/grub-core/extra_deps.lst
 }

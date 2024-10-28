@@ -6,6 +6,7 @@ SRC_URI += "file://0001-add-root-flag-to-grub-bios-setup.patch"
 
 FILES:${PN}-common += " \
     ${libdir}/grub/i386-pc \
+    ${datadir}/bash-completion \
 "
 
 RDEPENDS:${PN}-common += "diffutils freetype"
