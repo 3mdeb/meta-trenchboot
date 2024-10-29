@@ -216,7 +216,7 @@ update_grub() {
             fi
             kas-container --runtime-args \
                 "--device=$disk_device:$disk_device -v $DESTINATION_ARG:/mnt" \
-                shell meta-trenchboot/kas-tb-full.yml -c " \
+                shell "$KAS_YAML" -c " \
                   $verbose &&
                   cd /build/tmp/sysroots-components/x86_64/grub-native/usr &&
                   sudo ./bin/grub-mkimage -p '(hd0,msdos1)/grub' -d $grub_dir/i386-pc \
@@ -241,7 +241,7 @@ deploy_recipe() {
     local genericx86_path="$work_dir/genericx86_64-tb-linux"
 
     recipe_version=$(
-        kas-container shell meta-trenchboot/kas-tb-full.yml \
+        kas-container shell "$KAS_YAML" \
                 -c "devtool latest-version $RECIPE_ARG" 2>&1 |
             sed -n 's/INFO: Current version: //p'
         )
