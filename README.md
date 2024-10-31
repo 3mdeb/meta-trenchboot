@@ -1,16 +1,7 @@
 # meta-trenchboot
 
-[![pipeline status](https://gitlab.com/trenchboot1/3mdeb/meta-trenchboot/badges/master/pipeline.svg)](https://gitlab.com/trenchboot1/3mdeb/meta-trenchboot/-/commits/master)
-
-Meta layer for the Trenchboot purposes
-
----
-
-## WARNING
-
-This is WIP repo and it is under development. Use it at your own risk.
-If you have use-cases for such thing to be developed, please submit
-an issue or PR with description of your needs / fixes.
+Meta layer used for testing and demonstration of the
+[TrenchBoot](https://trenchboot.org/) project.
 
 ---
 
@@ -51,8 +42,15 @@ an issue or PR with description of your needs / fixes.
 * From `yocto` directory run:
 
     ```shell
-    kas-container build meta-trenchboot/kas-generic-tb.yml
+    kas-container build meta-trenchboot/<target>.yml
     ```
+
+Available targets are:
+    - `kas-tb-minimal.yml` - will produce minimal TrenchBoot demonstration image,
+      supporting only Linux boot path (both legacy and UEFI)
+    - `kas-tb-full.yml` - will produce full TrenchBoot demonstration image,
+      supporting both Linux and Xen boot paths at the same time (selectable via
+      GRUB boot menu entries)
 
 * Image build takes time, so be patient and after build's finish you should see
 something similar to (the exact tasks numbers may differ):
@@ -64,7 +62,10 @@ something similar to (the exact tasks numbers may differ):
     NOTE: Tasks Summary: Attempted 4774 tasks of which 4749 didn't need to be rerun and all succeeded.
     ```
 
-Thanks to publishing the build cache on cache.dasharo.com the time needed to
+> Note: the cache might not be always up to date currently due to
+> [this issue](https://github.com/3mdeb/meta-trenchboot/issues/47).
+
+Thanks to publishing the build cache on `cache.dasharo.com`, the time needed to
 finish the process should be significantly decreased.
 Using the cache is enabled in `kas/cache.yml` file and can be disabled by removing
 reference to this file in `kas/common.yml`:
@@ -122,15 +123,19 @@ To flash resulting image:
 
 ## Booting
 
-To run TrenchBoot connect drive with flashed image to target platform and boot
-from it. In GRUB menu you can choose normal `boot` or `slaunch-boot`.
+To run TrenchBoot, connect drive with flashed image to target platform and boot
+from it. In GRUB menu you can select one of the boot paths.
+
+> Note: the `minimal` image will contain only the Linux entries.
 
 ```text
                              GNU GRUB  version 2.06
 
  +----------------------------------------------------------------------------+
- |*boot                                                                       |
- | slaunch-boot                                                               |
+ |*Boot Linux normally                                                        |
+ | Boot Linux with TrenchBoot                                                 |
+ | Boot Xen normally                                                          |
+ | Boot Xen with TrenchBoot                                                   |
  |                                                                            |
  |                                                                            |
  |                                                                            |
@@ -140,30 +145,13 @@ from it. In GRUB menu you can choose normal `boot` or `slaunch-boot`.
       Press enter to boot the selected OS, `e' to edit the commands
 ```
 
-After a while you should see login prompt.
+After a while you should see a login prompt.
 
 ```text
-early console in extract_kernel
-input_data: 0x0000000006801548
-input_len: 0x000000000121e953
-output: 0x0000000004600000
-output_len: 0x00000000033caee8
-kernel_total_size: 0x0000000003030000
-needed_size: 0x0000000003400000
-trampoline_32bit: 0x0000000000000000
-Physical KASLR using RDRAND RDTSC...
-Virtual KASLR using RDRAND RDTSC...
-
-Decompressing Linux... Parsing ELF... Performing relocations... done.
-Booting the kernel (entry_offset: 0x0000000000000000).
-
-
-Reference Yocto distro for PC Engines hardware 0.2.0 tb ttyS0
-
 tb login:
 ```
 
-To login use `root` account without password.
+To login use `root` username, with no password.
 
 ## Running in QEMU
 
@@ -185,9 +173,14 @@ qemu-system-x86_64 -serial stdio -enable-kvm \
 Below is list of main recipes/components of this layer, path to main recipe file
 and short description of component
 
+* tb-full-image
+    - Recipe: recipes-extended/images/tb-full-image.bb
+    - Content: Recipe to build image containing TrenchBoot components for both
+      Linux and Xen boot paths
 * tb-minimal-image
     - Recipe: recipes-extended/images/tb-minimal-image.bb
-    - Content: Recipe to build image containing all TB components
+    - Content: Recipe to build image containing TrenchBoot components for Linux
+      boot path
 * intel-sinit-acm
     - Recipe: recipes-support/intel-sinit-acm/intel-sinit-acm_630744.bb
     - Content: Download and deploy Intel ACM `*.bin` files.
@@ -196,14 +189,13 @@ and short description of component
     - Content: Secure Kernel Loader
 * linux-tb
     - Recipe: recipes-kernel/linux/linux-tb_6.6.bb
-    - Content: Linux kernel
+    - Content: Linux kernel with TrenchBoot patches
+* xen_tb
+    - Recipe: recipes-extended/xen/xen_tb.bb
+    - Content: Xen with TrenchBoot patches
 * grub
     - Recipe: recipes-bsp/grub/grub_%.bbappend
-* grub-efi
-    - Recipe: recipes-bsp/grub/grub-efi_%.bbappend
-* grub & grub-efi
-    - Recipe: recipes-bsp/grub/grub-tb-common.inc
-    - Content: Common config for both recipes
+    - Content: GRUB with TrenchBoot patches
 
 ### Source revision
 

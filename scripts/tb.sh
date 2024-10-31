@@ -27,7 +27,7 @@ Usage:
         linux-tb                - Linux kernel
         grub                    - GRUB legacy
         grub-efi                - GRUB EFI
-        tb-minimal-image        - Complete image with all components. Can only
+        tb-full-image           - Complete image with all components. Can only
                                   be build or deployed
 
     destination:
@@ -122,7 +122,7 @@ parse_args() {
     esac
 
     case $RECIPE_ARG in
-        skl|grub|grub-efi|linux-tb|tb-minimal-image)
+        skl|grub|grub-efi|linux-tb|tb-full-image)
             ;;
         *)
             usage_error "Wrong recipe"
@@ -158,7 +158,7 @@ reset_recipe() {
 }
 
 build_recipe() {
-    if [ "$RECIPE_ARG" == "tb-minimal-image" ]; then
+    if [ "$RECIPE_ARG" == "tb-full-image" ]; then
         rm -rf "build/workspace/sources/grub/gnulib" 2&>/dev/null || true
         rm -rf "build/workspace/sources/grub-efi/gnulib" 2&>/dev/null || true
         kas-container shell "$KAS_YAML" \
@@ -216,7 +216,7 @@ update_grub() {
             fi
             kas-container --runtime-args \
                 "--device=$disk_device:$disk_device -v $DESTINATION_ARG:/mnt" \
-                shell meta-trenchboot/kas-generic-tb.yml -c " \
+                shell meta-trenchboot/kas-tb-full.yml -c " \
                   $verbose &&
                   cd /build/tmp/sysroots-components/x86_64/grub-native/usr &&
                   sudo ./bin/grub-mkimage -p '(hd0,msdos1)/grub' -d $grub_dir/i386-pc \
@@ -241,7 +241,7 @@ deploy_recipe() {
     local genericx86_path="$work_dir/genericx86_64-tb-linux"
 
     recipe_version=$(
-        kas-container shell meta-trenchboot/kas-generic-tb.yml \
+        kas-container shell meta-trenchboot/kas-tb-full.yml \
                 -c "devtool latest-version $RECIPE_ARG" 2>&1 |
             sed -n 's/INFO: Current version: //p'
         )
@@ -277,11 +277,11 @@ deploy_recipe() {
             ${SUDO} rsync -chrtvP --inplace \
                 "$kernel_path/deploy-linux-tb/bzImage-initramfs-genericx86-64.bin" "$DESTINATION_ARG/boot/bzImage"
             ;;
-        tb-minimal-image)
+        tb-full-image)
             tmp_dir=$(mktemp -d)
             mkdir "$tmp_dir/boot"
             mkdir "$tmp_dir/rootfs"
-            device_path=$(sudo losetup --show -Prf "$deploy_dir/tb-minimal-image-genericx86-64.rootfs.wic")
+            device_path=$(sudo losetup --show -Prf "$deploy_dir/tb-full-image-genericx86-64.rootfs.wic")
             # shellcheck disable=SC2064
             trap "set +e ; sudo umount ${device_path}p* ; \
                 sudo losetup -d $device_path ; set -e ; cleanup" EXIT
@@ -305,7 +305,7 @@ trap cleanup EXIT
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 LAYER_DIR="$(dirname "$SCRIPT_DIR")"
 WORK_DIR="$(dirname "$LAYER_DIR")"
-KAS_YAML="$LAYER_DIR/kas-generic-tb.yml"
+KAS_YAML="$LAYER_DIR/kas-tb-full.yml"
 pushd "$WORK_DIR" &>/dev/null || exit 1
 parse_args "$@"
 

@@ -12,4 +12,4 @@ repos:
 distro: tb-xen-distro
 machine: genericx86-64
 target:
-  - tb-xen-image
+  - tb-full-image
