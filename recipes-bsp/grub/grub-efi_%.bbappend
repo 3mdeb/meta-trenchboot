@@ -7,5 +7,6 @@ SRC_URI += "file://cfg"
 GRUB_BUILDIN = " \
                 boot linux ext2 fat serial part_msdos part_gpt normal \
                 efi_gop iso9660 configfile search loadenv test linux16 \
-                slaunch search_label multiboot2 \
+                slaunch search_label multiboot2 echo ls reboot chain \
+                at_keyboard \
                 "
