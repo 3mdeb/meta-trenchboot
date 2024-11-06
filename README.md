@@ -107,7 +107,7 @@ To flash resulting image:
     ```shell
     cd build/tmp/deploy/images/genericx86-64/
     sudo umount /dev/sdx*
-    sudo bmaptool copy tb-minimal-image-genericx86-64.rootfs.wic.gz /dev/sdx
+    sudo bmaptool copy tb-full-image-genericx86-64.rootfs.wic.gz /dev/sdx
     ```
 
     and you should see output similar to this (the exact size number may differ):
@@ -115,7 +115,7 @@ To flash resulting image:
     ```shell
     bmaptool: info: block map format version 2.0
     bmaptool: info: 275200 blocks of size 4096 (1.0 GiB), mapped 73240 blocks (286.1 MiB or 26.6%)
-    bmaptool: info: copying image 'tb-minimal-image-genericx86-64.rootfs.wic.gz' to block device '/dev/sdx' using bmap file 'tb-minimal-image-genericx86-64.rootfs.wic.bmap'
+    bmaptool: info: copying image 'tb-full-image-genericx86-64.rootfs.wic.gz' to block device '/dev/sdx' using bmap file 'tb-full-image-genericx86-64.rootfs.wic.bmap'
     bmaptool: info: 100% copied
     bmaptool: info: synchronizing '/dev/sdx'
     bmaptool: info: copying time: 19.3s, copying speed 14.9 MiB/sec
@@ -163,7 +163,7 @@ To start QEMU:
 ```shell
 cd build/tmp/deploy/images/genericx86-64/
 qemu-system-x86_64 -serial stdio -enable-kvm \
-    -drive file=tb-minimal-image-genericx86-64.rootfs.wic,if=virtio
+    -drive file=tb-full-image-genericx86-64.rootfs.wic,if=virtio
 ```
 
 ## Development
@@ -220,7 +220,7 @@ INFO: Recipe skl now set up to build from /build/workspace/sources/<recipe>
 
 All recipes' sources you wish to modify will be in `../build/workspace/sources`.
 After modifications, you can try to a build recipe by using
-`./scripts/tb.sh build <recipe>` or `./scripts/tb.sh build tb-minimal-image` to
+`./scripts/tb.sh build <recipe>` or `./scripts/tb.sh build tb-full-image` to
 build whole image containing modified recipes.
 After building the image, you can [install](#flash) and [boot](#booting) it or
 run it in [QEMU](#running-in-qemu).
