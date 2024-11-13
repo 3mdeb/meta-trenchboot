@@ -1,0 +1,46 @@
+From 3c325318d7e7c320c3897fc5df60f985f113305a Mon Sep 17 00:00:00 2001
+From: Sergii Dmytruk <sergii.dmytruk@3mdeb.com>
+Date: Thu, 21 Nov 2024 00:40:14 +0200
+Subject: [PATCH 2/2] x86/boot/slaunch_early.c: update for v11
+
+Signed-off-by: Sergii Dmytruk <sergii.dmytruk@3mdeb.com>
+---
+ xen/arch/x86/boot/slaunch_early.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
+
+diff --git a/xen/arch/x86/boot/slaunch_early.c b/xen/arch/x86/boot/slaunch_early.c
+index cf55bda0d6..b33e9b304c 100644
+--- a/xen/arch/x86/boot/slaunch_early.c
++++ b/xen/arch/x86/boot/slaunch_early.c
+@@ -140,14 +140,22 @@ void __stdcall slaunch_early_tests(uint32_t load_base_addr,
+          * Not an Intel CPU. Currently the only other option is AMD with SKINIT
+          * and secure-kernel-loader.
+          */
++        struct slr_table *slrt;
++        struct slr_entry_amd_info *amd_info;
+ 
+         const uint16_t *sl_header = (void *)slaunch_param;
+-        /* secure-kernel-loader passes MBI as a parameter for Multiboot
+-         * kernel. */
+-        result->mbi_pa = multiboot_param;
+-        /* The forth 16-bit integer of SKL's header is an offset to
+-         * bootloader's data, which is SLRT. */
+-        result->slrt_pa = slaunch_param + sl_header[3];
++        result->slrt_pa = slaunch_param + sl_header[34];
++
++        slrt = (struct slr_table *)result->slrt_pa;
++        result->mbi_pa = 0;
++
++        amd_info = (struct slr_entry_amd_info *)
++                   slr_next_entry_by_tag (slrt, NULL, SLR_ENTRY_AMD_INFO);
++        /* Basic checks only, SKL checked and consumed the rest. */
++        if ( amd_info == NULL || amd_info->hdr.size != sizeof(*amd_info) )
++            return;
++
++        result->mbi_pa = amd_info->boot_params_base;
+         return;
+     }
+ 
+-- 
+2.47.0
+
