@@ -1,0 +1,158 @@
+From 432f9f6a293640f27efeae3abb54cc0765b39557 Mon Sep 17 00:00:00 2001
+From: Sergii Dmytruk <sergii.dmytruk@3mdeb.com>
+Date: Thu, 14 Nov 2024 16:17:33 +0200
+Subject: [PATCH 1/2] include/xen/slr_table.h: update to v11 version
+
+Signed-off-by: Sergii Dmytruk <sergii.dmytruk@3mdeb.com>
+---
+ xen/include/xen/slr_table.h | 70 ++++++++++++++++++++++---------------
+ 1 file changed, 42 insertions(+), 28 deletions(-)
+
+diff --git a/xen/include/xen/slr_table.h b/xen/include/xen/slr_table.h
+index 74dd27b2e4..ccb042c565 100644
+--- a/xen/include/xen/slr_table.h
++++ b/xen/include/xen/slr_table.h
+@@ -83,8 +83,8 @@ struct slr_table
+  */
+ struct slr_entry_hdr
+ {
+-    uint16_t tag;
+-    uint16_t size;
++    uint32_t tag;
++    uint32_t size;
+ } __packed;
+ 
+ /*
+@@ -93,7 +93,7 @@ struct slr_entry_hdr
+ struct slr_bl_context
+ {
+     uint16_t bootloader;
+-    uint16_t reserved;
++    uint16_t reserved[3];
+     uint64_t context;
+ } __packed;
+ 
+@@ -103,11 +103,13 @@ struct slr_bl_context
+ struct slr_entry_dl_info
+ {
+     struct slr_entry_hdr hdr;
+-    struct slr_bl_context bl_context;
+-    uint64_t dl_handler;
++    uint64_t dce_size;
+     uint64_t dce_base;
+-    uint32_t dce_size;
++    uint64_t dlme_size;
++    uint64_t dlme_base;
+     uint64_t dlme_entry;
++    struct slr_bl_context bl_context;
++    uint64_t dl_handler;
+ } __packed;
+ 
+ /*
+@@ -118,19 +120,8 @@ struct slr_entry_log_info
+     struct slr_entry_hdr hdr;
+     uint16_t format;
+     uint16_t reserved;
+-    uint64_t addr;
+     uint32_t size;
+-} __packed;
+-
+-/*
+- * DRTM Measurement Policy
+- */
+-struct slr_entry_policy
+-{
+-    struct slr_entry_hdr hdr;
+-    uint16_t revision;
+-    uint16_t nr_entries;
+-    /* policy_entries[] */
++    uint64_t addr;
+ } __packed;
+ 
+ /*
+@@ -142,11 +133,23 @@ struct slr_policy_entry
+     uint16_t entity_type;
+     uint16_t flags;
+     uint16_t reserved;
+-    uint64_t entity;
+     uint64_t size;
++    uint64_t entity;
+     char evt_info[TPM_EVENT_INFO_LENGTH];
+ } __packed;
+ 
++/*
++ * DRTM Measurement Policy
++ */
++struct slr_entry_policy
++{
++    struct slr_entry_hdr hdr;
++    uint16_t reserved[2];
++    uint16_t revision;
++    uint16_t nr_entries;
++    struct slr_policy_entry policy_entries[];
++} __packed;
++
+ /*
+  * Secure Launch defined MTRR saving structures
+  */
+@@ -169,6 +172,7 @@ struct slr_txt_mtrr_state
+ struct slr_entry_intel_info
+ {
+     struct slr_entry_hdr hdr;
++    uint64_t txt_heap;
+     uint64_t saved_misc_enable_msr;
+     struct slr_txt_mtrr_state saved_bsp_mtrrs;
+ } __packed;
+@@ -179,6 +183,12 @@ struct slr_entry_intel_info
+ struct slr_entry_amd_info
+ {
+     struct slr_entry_hdr hdr;
++    u64 next;
++    u32 type;
++    u32 len;
++    u64 slrt_size;
++    u64 slrt_base;
++    u64 boot_params_base;
+ } __packed;
+ 
+ /*
+@@ -189,23 +199,27 @@ struct slr_entry_arm_info
+     struct slr_entry_hdr hdr;
+ } __packed;
+ 
+-struct slr_entry_uefi_config
+-{
+-    struct slr_entry_hdr hdr;
+-    uint16_t revision;
+-    uint16_t nr_entries;
+-    /* uefi_cfg_entries[] */
+-} __packed;
+-
++/*
++ * UEFI config measurement entry
++ */
+ struct slr_uefi_cfg_entry
+ {
+     uint16_t pcr;
+     uint16_t reserved;
+-    uint64_t cfg; /* address or value */
+     uint32_t size;
++    uint64_t cfg; /* address or value */
+     char evt_info[TPM_EVENT_INFO_LENGTH];
+ } __packed;
+ 
++struct slr_entry_uefi_config
++{
++    struct slr_entry_hdr hdr;
++    uint16_t reserved[2];
++    uint16_t revision;
++    uint16_t nr_entries;
++    struct slr_uefi_cfg_entry uefi_cfg_entries[];
++} __packed;
++
+ static inline void *
+ slr_end_of_entries(struct slr_table *table)
+ {
+-- 
+2.47.0
+
