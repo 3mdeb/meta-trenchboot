@@ -8,9 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4641e94ec96f98fabc56ff9cc48be14b"
 DEPENDS = "util-linux-native"
 
 SRC_URI = "git://github.com/TrenchBoot/secure-kernel-loader.git;protocol=https;branch=${BRANCH};name=skl"
-SRC_URI:append = " file://0001-head-pass-entry-point-address-in-ebx-to-payload.patch"
-BRANCH = "master"
-SRCREV = "1cc0a75191ed0309a6cc660533a8e044f40019d3"
+BRANCH = "skl-loader-amdsl-v11-nopsp"
+SRCREV = "2e29551c54a1e1f5065d9f37bd3f2594faedf8a7"
 
 TUNE_CCARGS:remove = "-msse3 -mfpmath=sse"
 
