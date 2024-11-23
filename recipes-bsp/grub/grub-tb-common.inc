@@ -5,8 +5,8 @@ SRC_URI = " \
            git://github.com/coreutils/gnulib;name=gnulib;branch=${BRANCH_gnulib};protocol=https;destsuffix=git/gnulib \
           "
 
-BRANCH_grub = "tb-2.12-57-v1"
-SRCREV_grub = "8f2771861b20a34faa02d797c44b1edc4d1592c1"
+BRANCH_grub = "grub-sl-2.12-v11-amd-no-psp"
+SRCREV_grub = "fdf1960e4eb74f88dd1c6d5a9ef375a5805dfec6"
 
 # We add gnulib to SRC_URI to avoid downloading it during the do_configure().
 # The bootstrap script seems to be smart enough to skip fetching repo again
