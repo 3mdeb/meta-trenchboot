@@ -24,7 +24,7 @@ Meta layer used for testing and demonstration of the
     ```bash
     mkdir yocto
     cd yocto
-    git clone https://github.com/3mdeb/meta-trenchboot.git
+    git clone https://github.com/zarhus/meta-trenchboot.git
     ```
 
 * [bmaptool](https://docs.yoctoproject.org/dev-manual/bmaptool.html) installed
@@ -63,7 +63,7 @@ something similar to (the exact tasks numbers may differ):
     ```
 
 > Note: the cache might not be always up to date currently due to
-> [this issue](https://github.com/3mdeb/meta-trenchboot/issues/47).
+> [this issue](https://github.com/zarhus/meta-trenchboot/issues/47).
 
 Thanks to publishing the build cache on `cache.dasharo.com`, the time needed to
 finish the process should be significantly decreased.
